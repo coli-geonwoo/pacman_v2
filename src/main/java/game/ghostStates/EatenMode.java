@@ -4,19 +4,19 @@ import game.entities.ghosts.Ghost;
 import game.utils.Utils;
 import game.utils.WallCollisionDetector;
 
-//Classe pour décrire l'état concret d'un fantôme mangé par Pacman
+//팩맨에게 먹힌 유령의 구체적인 상태를 설명하는 클래스
 public class EatenMode extends GhostState{
     public EatenMode(Ghost ghost) {
         super(ghost);
     }
 
-    //Transition lorsque le fantôme retourne dans sa maison
+    //유령이 집으로 돌아올 때의 전환
     @Override
     public void insideHouse() {
         ghost.switchHouseMode();
     }
 
-    //Dans cet état, la position ciblée est une case au milieu de la maison des fantômes
+    //이 상태에서는 목표 위치는 유령집 중앙의 정사각형입니다.
     @Override
     public int[] getTargetPosition(){
         int[] position = new int[2];
@@ -26,6 +26,7 @@ public class EatenMode extends GhostState{
     }
 
     //Même chose que la méthode de la classe abstraite, mais on ignore ici les collisions avec les murs de la maison des fantômes
+    //추상 클래스 메서드와 동일하지만 여기서는 유령 집의 벽과의 충돌을 무시합니다.
     @Override
     public void computeNextDir() {
         int new_xSpd = 0;

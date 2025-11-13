@@ -37,6 +37,7 @@ public class UIPanel extends JPanel implements Observer {
     }
 
     //L'interface est notifiée lorsque Pacman est en contact avec une PacGum, une SuperPacGum ou un fantôme, et on met à jour le score affiché en conséquence
+    //팩맨이 팩덤, 파워 팩덤 또는 유령과 접촉하면 인터페이스에 알림이 전송되고, 표시되는 점수도 그에 따라 업데이트됩니다.
     @Override
     public void updatePacGumEaten(PacGum pg) {
         updateScore(10);
@@ -49,6 +50,7 @@ public class UIPanel extends JPanel implements Observer {
 
     @Override
     public void updateGhostCollision(Ghost gh) {
+        //팩맨이 유령과 접촉하면 유령이 "겁먹은" 모드에 있을 때만 점수가 업데이트됩니다.
         if (gh.getState() instanceof FrightenedMode) { //Dans le cas où Pacman est en contact avec un fantôme on ne met à jour le score que lorsque ce dernier est en mode "frightened"
             updateScore(500);
         }

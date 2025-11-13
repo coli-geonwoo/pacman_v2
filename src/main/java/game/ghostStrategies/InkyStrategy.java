@@ -12,7 +12,7 @@ public class InkyStrategy implements IGhostStrategy{
         this.otherGhost = ghost;
     }
 
-    //Inky se base sur la position de Blinky pour cibler Pacman : on prend un vecteur entre la position de Blinky et une case devant Pacman, et additionne ce vecteur à la position une case devant Pacman pour obtenir la cible d'Inky
+    //잉키는 블링키의 위치를 ​​이용해 팩맨을 타겟으로 삼습니다. 블링키의 위치와 팩맨 앞의 한 칸 사이의 벡터를 구하고, 이 벡터를 팩맨 앞의 한 칸 위치에 더해 ​​잉키의 타겟을 구합니다.
     @Override
     public int[] getChaseTargetPosition() {
         int[] position = new int[2];
@@ -26,6 +26,7 @@ public class InkyStrategy implements IGhostStrategy{
     }
 
     //En pause, Inky cible la case en bas à droite
+    //일시 정지 시 Inky는 오른쪽 하단 사각형을 타겟팅합니다.
     @Override
     public int[] getScatterTargetPosition() {
         int[] position = new int[2];

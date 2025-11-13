@@ -3,7 +3,7 @@ package game.entities.ghosts;
 import game.Game;
 import game.ghostStrategies.InkyStrategy;
 
-//Classe concrète de Inky (le fantôme bleu)
+//잉키의 구체적 수업(푸른 유령)
 public class Inky extends Ghost {
     public Inky(int xPos, int yPos) {
         super(xPos, yPos, "inky.png");

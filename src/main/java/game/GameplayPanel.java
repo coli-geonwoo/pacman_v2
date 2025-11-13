@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 //Panneau de la "zone de jeu"
+//"플레이 구역" 표지판
 public class GameplayPanel extends JPanel implements Runnable {
     public static int width;
     public static int height;
@@ -42,7 +43,7 @@ public class GameplayPanel extends JPanel implements Runnable {
         }
     }
 
-    //initialisation du jeu
+    //게임 초기화
     public void init() {
         running = true;
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -53,17 +54,19 @@ public class GameplayPanel extends JPanel implements Runnable {
         game = new Game();
     }
 
-    //mise à jour du jeu
+    //게임 업데이트
     public void update() {
         game.update();
     }
 
     //gestion des inputs
+    //입력 관리
     public void input(KeyHandler key) {
         game.input(key);
     }
 
     //"rendu du jeu" ; on prépare ce qui va être affiché en dessinant sur une "image" : un fond et les entités du jeu au dessus
+//"게임 렌더링"; "이미지"에 그려서 표시할 내용을 준비합니다. 배경과 그 위에 있는 게임 엔터티
     public void render() {
         if (g != null) {
             g.drawImage(backgroundImage, 0, 0, width, height, null);
@@ -71,7 +74,7 @@ public class GameplayPanel extends JPanel implements Runnable {
         }
     }
 
-    //Affichage du jeu : on affiche l'image avec le rendu
+    //게임 표시 : 렌더링을 통해 이미지가 표시됩니다.
     public void draw() {
         Graphics g2 = this.getGraphics();
         g2.drawImage(img, 0, 0, width, height, null);
@@ -83,7 +86,8 @@ public class GameplayPanel extends JPanel implements Runnable {
         init();
 
         //Pour faire en sorte que le jeu tourne à 60FPS (tutoriel consulté : https://www.youtube.com/watch?v=LhUN3EKZiio)
-        final double GAME_HERTZ = 60.0;
+        //게임을 60FPS로 실행하려면(튜토리얼 참조: https://www.youtube.com/watch?v=LhUN3EKZiio)
+        final double GAME_HERTZ = 50.0;
         final double TBU = 1000000000 / GAME_HERTZ; //Time before update
 
         final int MUBR = 5; // Must update before render
@@ -91,7 +95,7 @@ public class GameplayPanel extends JPanel implements Runnable {
         double lastUpdateTime = System.nanoTime();
         double lastRenderTime;
 
-        final double TARGET_FPS = 60.0;
+        final double TARGET_FPS = 50.0;
         final double TTBR = 1000000000 / TARGET_FPS; //Total time before render
 
         int frameCount = 0;

@@ -3,6 +3,7 @@ package game.entities;
 import java.awt.*;
 
 //Classe abtraite pour décrite une entité
+//엔터티를 설명하는 추상 클래스
 public abstract class Entity {
     protected int size;
     protected int xPos;

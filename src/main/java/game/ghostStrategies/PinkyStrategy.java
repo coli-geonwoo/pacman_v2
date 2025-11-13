@@ -15,7 +15,7 @@ public class PinkyStrategy implements IGhostStrategy {
         return position;
     }
 
-    //En pause, Pinky cible la case en haut à gauche
+    //일시 정지 시, 핑키는 왼쪽 상단 사각형을 목표로 삼습니다.
     @Override
     public int[] getScatterTargetPosition() {
         int[] position = new int[2];

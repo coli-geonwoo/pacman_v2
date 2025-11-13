@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 //Classe pour gérer les inputs
+//입력을 관리하는 클래스
 public class KeyHandler implements KeyListener {
 
     public static List<Key> keys = new ArrayList<>();

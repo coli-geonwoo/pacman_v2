@@ -11,7 +11,7 @@ import game.utils.WallCollisionDetector;
 import java.util.ArrayList;
 import java.util.List;
 
-//Classe pour décrire Pacman
+//팩맨을 설명하는 클래스
 public class Pacman extends MovingEntity implements Sujet {
     private CollisionDetector collisionDetector;
     private List<Observer> observerCollection;
@@ -21,15 +21,16 @@ public class Pacman extends MovingEntity implements Sujet {
         observerCollection = new ArrayList<>();
     }
 
-    //Gestion des déplacements
+    //여행 관리
     public void input(KeyHandler k) {
         int new_xSpd = 0;
         int new_ySpd = 0;
 
-        if (!onTheGrid()) return; //Pacman doit être sur une "case" de la zone de jeu
-        if (!onGameplayWindow()) return; //Pacman doit être dans la zone de jeu
+        if (!onTheGrid()) return; //팩맨은 플레이 영역의 "사각형"에 있어야 합니다.
+        if (!onGameplayWindow()) return; //팩맨은 플레이 영역에 있어야 합니다.
 
         //Selon les touches appuyées, la direction de pacman change en conséquence
+        //누르는 키에 따라 팩맨의 방향이 달라집니다.
         if (k.k_left.isPressed && xSpd >= 0 && !WallCollisionDetector.checkWallCollision(this, -spd, 0)) {
             new_xSpd = -spd;
         }
@@ -63,7 +64,7 @@ public class Pacman extends MovingEntity implements Sujet {
 
     @Override
     public void update() {
-        //On teste à chaque fois si Pacman est en contact avec une PacGum, une SuperPacGum, ou un fantôme, et les observers sont notifiés en conséquence
+        //우리는 팩맨이 팩덤, 파워 팩덤, 유령과 접촉하는지 매번 확인하고, 관찰자들에게 그에 따른 알림을 보냅니다.
         PacGum pg = (PacGum) collisionDetector.checkCollision(this, PacGum.class);
         if (pg != null) {
             notifyObserverPacGumEaten(pg);
@@ -79,7 +80,7 @@ public class Pacman extends MovingEntity implements Sujet {
             notifyObserverGhostCollision(gh);
         }
 
-        //S'il n'y a pas de mur à la prochaine position potentielle de Pacman, on met à jour sa position
+        //Pacman의 다음 잠재적 위치에 벽이 없으면 그의 위치가 업데이트됩니다.
         if (!WallCollisionDetector.checkWallCollision(this, xSpd, ySpd)) {
             updatePosition();
         }

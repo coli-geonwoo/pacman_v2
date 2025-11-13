@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Classe gérant le jeu en lui même
+//게임 자체를 관리하는 클래스
 public class Game implements Observer {
     //Pour lister les différentes entités présentes sur la fenêtre
+    //창에 있는 다양한 엔터티를 나열하려면
     private List<Entity> objects = new ArrayList();
     private List<Ghost> ghosts = new ArrayList();
     private static List<Wall> walls = new ArrayList();
@@ -28,9 +30,10 @@ public class Game implements Observer {
     private static boolean firstInput = false;
 
     public Game(){
-        //Initialisation du jeu
+        //게임 초기화
 
         //Chargement du fichier csv du niveau
+        //레벨 csv 파일 로딩
         List<List<String>> data = null;
         try {
             data = new CsvReader().parseCsv(getClass().getClassLoader().getResource("level/level.csv").toURI());
@@ -45,16 +48,18 @@ public class Game implements Observer {
         AbstractGhostFactory abstractGhostFactory = null;
 
         //Le niveau a une "grille", et pour chaque case du fichier csv, on affiche une entité parculière sur une case de la grille selon le caracère présent
+        //레벨에는 "격자"가 있으며 CSV 파일의 각 셀에 대해 현재 캐릭터에 따라 특정 엔터티가 격자의 셀에 표시됩니다.
         for(int xx = 0 ; xx < cellsPerRow ; xx++) {
             for(int yy = 0 ; yy < cellsPerColumn ; yy++) {
                 String dataChar = data.get(yy).get(xx);
-                if (dataChar.equals("x")) { //Création des murs
+                if (dataChar.equals("x")) { //Création des murs //벽의 생성
                     objects.add(new Wall(xx * cellSize, yy * cellSize));
                 }else if (dataChar.equals("P")) { //Création de Pacman
                     pacman = new Pacman(xx * cellSize, yy * cellSize);
                     pacman.setCollisionDetector(collisionDetector);
 
                     //Enregistrement des différents observers de Pacman
+                    //다양한 Pacman 관찰자들의 기록
                     pacman.registerObserver(GameLauncher.getUIPanel());
                     pacman.registerObserver(this);
                 }else if (dataChar.equals("b") || dataChar.equals("p") || dataChar.equals("i") || dataChar.equals("c")) { //Création des fantômes en utilisant les différentes factories
@@ -82,7 +87,7 @@ public class Game implements Observer {
                     objects.add(new PacGum(xx * cellSize, yy * cellSize));
                 }else if (dataChar.equals("o")) { //Création des SuperPacGums
                     objects.add(new SuperPacGum(xx * cellSize, yy * cellSize));
-                }else if (dataChar.equals("-")) { //Création des murs de la maison des fantômes
+                }else if (dataChar.equals("-")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
                     objects.add(new GhostHouse(xx * cellSize, yy * cellSize));
                 }
             }
@@ -106,6 +111,7 @@ public class Game implements Observer {
     }
 
     //Mise à jour de toutes les entités
+    //모든 엔터티 업데이트
     public void update() {
         for (Entity o: objects) {
             if (!o.isDestroyed()) o.update();
@@ -113,11 +119,13 @@ public class Game implements Observer {
     }
 
     //Gestion des inputs
+    //입력 관리
     public void input(KeyHandler k) {
         pacman.input(k);
     }
 
     //Rendu de toutes les entités
+    //모든 엔터티의 렌더링
     public void render(Graphics2D g) {
         for (Entity o: objects) {
             if (!o.isDestroyed()) o.render(g);
@@ -132,6 +140,7 @@ public class Game implements Observer {
     }
 
     //Le jeu est notifiée lorsque Pacman est en contact avec une PacGum, une SuperPacGum ou un fantôme
+    //팩맨이 팩덤, 파워 펠릿, 유령과 접촉하면 게임에 알림이 전송됩니다.
     @Override
     public void updatePacGumEaten(PacGum pg) {
         pg.destroy(); //La PacGum est détruite quand Pacman la mange
