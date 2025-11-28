@@ -39,11 +39,7 @@ public abstract class GhostState {
     }
 
     //유령이 이동할 다음 방향을 계산하는 방법
-    //TODO 리팩터링
     public void computeNextDir(Ghost ghost) {
-        int new_xSpd = 0;
-        int new_ySpd = 0;
-
         if (!ghost.onTheGrid()) {
             return; //유령은 게임 영역의 "사각형"에 있어야 합니다.
         }
@@ -53,27 +49,7 @@ public abstract class GhostState {
 
         Position targetPosition = getTargetPosition(ghost);
         CalculateResult minDistDirection = nextDirectionCalculator.calculateNextDirection(ghost, targetPosition, ignoreGhostHouses());
-        Speeds speeds = minDistDirection.getSpeeds();
-        new_xSpd = speeds.getxSpeed();
-        new_ySpd = speeds.getySpeed();
-
-        if (speeds.isSame(0, 0)) {
-            return;
-        }
-
-        //모든 케이스가 테스트된 후, 고스트의 방향을 변경합니다(이 방향은 수평 속도와 수직 속도로 정의되므로 대각선으로 이동할 수 없도록 검사를 수행합니다)
-        if (Math.abs(new_xSpd) != Math.abs(new_ySpd)) {
-            ghost.setxSpd(new_xSpd);
-            ghost.setySpd(new_ySpd);
-        } else {
-            if (new_xSpd != 0) {
-                ghost.setxSpd(0);
-                ghost.setxSpd(new_ySpd);
-            } else {
-                ghost.setxSpd(new_xSpd);
-                ghost.setySpd(0);
-            }
-        }
+        ghost.updateSpeed(minDistDirection.getSpeeds());
     }
 
     public void render(Graphics2D g, Ghost ghost) {

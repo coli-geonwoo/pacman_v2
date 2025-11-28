@@ -10,8 +10,12 @@ public class Speeds {
         this.ySpeed = ySpeed;
     }
 
-    public boolean isSame(int xSpeed, int ySpeed) {
-        return this.xSpeed == xSpeed && this.ySpeed == ySpeed;
+    public boolean isStopped() {
+        return xSpeed == 0 && ySpeed == 0;
+    }
+
+    public boolean isDiagonal() {
+        return Math.abs(xSpeed) == Math.abs(ySpeed);
     }
 
     public int getxSpeed() {

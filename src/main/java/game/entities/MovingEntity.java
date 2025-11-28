@@ -1,6 +1,7 @@
 package game.entities;
 
 import game.GameplayPanel;
+import game.entities.direction.Speeds;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -148,6 +149,23 @@ public abstract class MovingEntity extends Entity {
 
     public int getxSpd() {
         return xSpd;
+    }
+
+    public void updateSpeed(Speeds speeds) {
+        if (speeds.isStopped()) {
+            return;
+        }
+
+        if (!speeds.isDiagonal()) {
+            this.xSpd = speeds.getxSpeed();
+            this.ySpd = speeds.getySpeed();
+        } else if (speeds.getxSpeed() != 0) {
+            this.xSpd = 0;
+            this.ySpd = speeds.getySpeed();
+        } else {
+            this.xSpd = speeds.getxSpeed();
+            this.ySpd = 0;
+        }
     }
 
     public void setxSpd(int xSpd) {
