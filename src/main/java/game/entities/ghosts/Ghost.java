@@ -77,12 +77,12 @@ public abstract class Ghost extends MovingEntity {
         }
 
         //유령이 자신의 집 바로 위 칸에 있는 경우, 해당 주에 알림을 보내 적절한 전환을 적용합니다.
-        if (xPos == 208 && yPos == 168) {
+        if (position.isSame(208, 168)) {
             state.outsideHouse(this);
         }
 
         //유령이 집 중앙의 칸에 있는 경우, 해당 상태에 알림을 보내 적절한 전환을 적용합니다.
-        if (xPos == 208 && yPos == 200) {
+        if (position.isSame(208, 200)) {
             state.insideHouse(this);
         }
 

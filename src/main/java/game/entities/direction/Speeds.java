@@ -10,6 +10,19 @@ public class Speeds {
         this.ySpeed = ySpeed;
     }
 
+    public int getDirection() {
+        if (xSpeed > 0) {
+            return 0;
+        } else if (xSpeed < 0) {
+            return 1;
+        } else if (ySpeed < 0) {
+            return 2;
+        } else if (ySpeed > 0) {
+            return 3;
+        }
+        throw new RuntimeException("Invalid direction");
+    }
+
     public boolean isStopped() {
         return xSpeed == 0 && ySpeed == 0;
     }

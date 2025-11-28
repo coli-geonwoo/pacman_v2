@@ -15,7 +15,7 @@ public class SuperPacGum extends StaticEntity {
         //SuperPacGums가 깜빡이도록 하려면 60프레임 중 30프레임만 렌더링하면 됩니다.
         if (frameCount%60 < 30) {
             g.setColor(new Color(255, 183, 174));
-            g.fillOval(this.xPos, this.yPos, this.size, this.size);
+            g.fillOval(getxPos(), getyPos(), this.size, this.size);
         }
     }
 

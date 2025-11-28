@@ -3,6 +3,7 @@ package game.entities;
 import game.Game;
 import game.Observer;
 import game.Sujet;
+import game.entities.direction.Speeds;
 import game.entities.ghosts.Ghost;
 import game.utils.CollisionDetector;
 import game.utils.KeyHandler;
@@ -31,35 +32,23 @@ public class Pacman extends MovingEntity implements Sujet {
 
         //Selon les touches appuyées, la direction de pacman change en conséquence
         //누르는 키에 따라 팩맨의 방향이 달라집니다.
-        if (k.k_left.isPressed && xSpd >= 0 && !WallCollisionDetector.checkWallCollision(this, -spd, 0)) {
+        if (k.k_left.isPressed && getxSpd() >= 0 && !WallCollisionDetector.checkWallCollision(this, -spd, 0)) {
             new_xSpd = -spd;
         }
-        if (k.k_right.isPressed && xSpd <= 0 && !WallCollisionDetector.checkWallCollision(this, spd, 0)) {
+        if (k.k_right.isPressed && getxSpd() <= 0 && !WallCollisionDetector.checkWallCollision(this, spd, 0)) {
             new_xSpd = spd;
         }
-        if (k.k_up.isPressed && ySpd >= 0 && !WallCollisionDetector.checkWallCollision(this, 0, -spd)) {
+        if (k.k_up.isPressed && getySpd() >= 0 && !WallCollisionDetector.checkWallCollision(this, 0, -spd)) {
             new_ySpd = -spd;
         }
-        if (k.k_down.isPressed && ySpd <= 0 && !WallCollisionDetector.checkWallCollision(this, 0, spd)) {
+        if (k.k_down.isPressed && getySpd() <= 0 && !WallCollisionDetector.checkWallCollision(this, 0, spd)) {
             new_ySpd = spd;
         }
 
-        if (new_xSpd == 0 && new_ySpd == 0) return;
-
+        Speeds updateSpeeds = new Speeds(new_xSpd, new_ySpd);
+        if (updateSpeeds.isStopped()) return;
         if (!Game.getFirstInput()) Game.setFirstInput(true);
-
-        if (Math.abs(new_xSpd) != Math.abs(new_ySpd)) {
-            xSpd = new_xSpd;
-            ySpd = new_ySpd;
-        } else {
-            if (xSpd != 0) {
-                xSpd = 0;
-                ySpd = new_ySpd;
-            }else{
-                xSpd = new_xSpd;
-                ySpd = 0;
-            }
-        }
+        super.updateSpeed(updateSpeeds);
     }
 
     @Override
@@ -81,7 +70,7 @@ public class Pacman extends MovingEntity implements Sujet {
         }
 
         //Pacman의 다음 잠재적 위치에 벽이 없으면 그의 위치가 업데이트됩니다.
-        if (!WallCollisionDetector.checkWallCollision(this, xSpd, ySpd)) {
+        if (!WallCollisionDetector.checkWallCollision(this, getxSpd(), getySpd())) {
             updatePosition();
         }
     }
