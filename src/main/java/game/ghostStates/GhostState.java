@@ -1,5 +1,6 @@
 package game.ghostStates;
 
+import game.entities.Position;
 import game.entities.ghosts.Ghost;
 import game.utils.Utils;
 import game.utils.WallCollisionDetector;
@@ -35,7 +36,7 @@ public abstract class GhostState {
         if (ghost.getxSpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, -ghost.getSpd(), 0)) {
             //On regarde la distance entre la position ciblée et la position potentielle du fantôme si ce dernier irait vers la gauche
             //우리는 유령이 왼쪽으로 이동한다면 목표 위치와 유령의 잠재적 위치 사이의 거리를 살펴봅니다.
-            double distance = Utils.getDistance(ghost.getxPos() - ghost.getSpd(), ghost.getyPos(), getTargetPosition()[0], getTargetPosition()[1]);
+            double distance = Utils.getDistance(ghost.getxPos() - ghost.getSpd(), ghost.getyPos(), getTargetPosition().getX(), getTargetPosition().getY());
 
             //Si cette distance est inférieure à la distance minimale courante, on dit que le fantôme va vers la gauche et on met à jour la distance minimale
             //이 거리가 현재 최소 거리보다 작으면 유령이 왼쪽으로 이동한다고 말하고 최소 거리를 업데이트합니다.
@@ -49,7 +50,7 @@ public abstract class GhostState {
         //Même chose en testant vers la droite
         //오른쪽으로 테스트할 때도 마찬가지입니다.
         if (ghost.getxSpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, ghost.getSpd(), 0)) {
-            double distance = Utils.getDistance(ghost.getxPos() + ghost.getSpd(), ghost.getyPos(),  getTargetPosition()[0], getTargetPosition()[1]);
+            double distance = Utils.getDistance(ghost.getxPos() + ghost.getSpd(), ghost.getyPos(),  getTargetPosition().getX(), getTargetPosition().getY());
             if (distance < minDist) {
                 new_xSpd = ghost.getSpd();
                 new_ySpd = 0;
@@ -59,7 +60,7 @@ public abstract class GhostState {
 
         //위쪽으로 테스트할 때도 마찬가지입니다.
         if (ghost.getySpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, -ghost.getSpd())) {
-            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() - ghost.getSpd(), getTargetPosition()[0], getTargetPosition()[1]);
+            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() - ghost.getSpd(), getTargetPosition().getX(), getTargetPosition().getY());
             if (distance < minDist) {
                 new_xSpd = 0;
                 new_ySpd = -ghost.getSpd();
@@ -69,7 +70,7 @@ public abstract class GhostState {
 
         //아래로 테스트할 때도 마찬가지입니다.
         if (ghost.getySpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, ghost.getSpd())) {
-            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() + ghost.getSpd(), getTargetPosition()[0], getTargetPosition()[1]);
+            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() + ghost.getSpd(), getTargetPosition().getX(), getTargetPosition().getY());
             if (distance < minDist) {
                 new_xSpd = 0;
                 new_ySpd = ghost.getSpd();
@@ -95,5 +96,6 @@ public abstract class GhostState {
         }
     }
 
-    public abstract int[] getTargetPosition();
+    public abstract Position getTargetPosition();
+
 }

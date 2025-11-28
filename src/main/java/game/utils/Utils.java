@@ -1,5 +1,6 @@
 package game.utils;
 
+import game.entities.Position;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -35,6 +36,13 @@ public class Utils {
         point[0] = x + (int)(Math.cos(direction) * distance);
         point[1] = y + (int)(Math.sin(direction) * distance);
         return point;
+    }
+
+    public static Position getPointDistanceDirection2(int x, int y, double distance, double direction) {
+        return new Position(
+        x + (int)(Math.cos(direction) * distance),
+        y + (int)(Math.sin(direction) * distance)
+        );
     }
 
     //Fonction pour convertir une "direction" d'une entité en un angle en radians grâce à la map créée plus haut

@@ -1,5 +1,6 @@
 package game.ghostStates;
 
+import game.entities.Position;
 import game.entities.ghosts.Ghost;
 import game.utils.Utils;
 import game.utils.WallCollisionDetector;
@@ -20,11 +21,8 @@ public class HouseMode extends GhostState{
     //Dans cet état, la position ciblée est la case juste au dessus de la maison des fantômes
     //이 상태에서는 목표 위치는 유령의 집 바로 위의 사각형입니다.
     @Override
-    public int[] getTargetPosition(){
-        int[] position = new int[2];
-        position[0] = 208;
-        position[1] = 168;
-        return position;
+    public Position getTargetPosition(){
+        return new Position(208,168);
     }
 
     //Même chose que la méthode de la classe abstraite, mais on ignore ici les collisions avec les murs de la maison des fantômes
@@ -40,7 +38,7 @@ public class HouseMode extends GhostState{
         double minDist = Double.MAX_VALUE;
 
         if (ghost.getxSpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, -ghost.getSpd(), 0, true)) {
-            double distance = Utils.getDistance(ghost.getxPos() - ghost.getSpd(), ghost.getyPos(), getTargetPosition()[0], getTargetPosition()[1]);
+            double distance = Utils.getDistance(ghost.getxPos() - ghost.getSpd(), ghost.getyPos(), getTargetPosition().getX(), getTargetPosition().getY());
             if (distance < minDist) {
                 new_xSpd = -ghost.getSpd();
                 new_ySpd = 0;
@@ -48,7 +46,7 @@ public class HouseMode extends GhostState{
             }
         }
         if (ghost.getxSpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, ghost.getSpd(), 0, true)) {
-            double distance = Utils.getDistance(ghost.getxPos() + ghost.getSpd(), ghost.getyPos(),  getTargetPosition()[0], getTargetPosition()[1]);
+            double distance = Utils.getDistance(ghost.getxPos() + ghost.getSpd(), ghost.getyPos(),  getTargetPosition().getX(), getTargetPosition().getY());
             if (distance < minDist) {
                 new_xSpd = ghost.getSpd();
                 new_ySpd = 0;
@@ -56,7 +54,7 @@ public class HouseMode extends GhostState{
             }
         }
         if (ghost.getySpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, -ghost.getSpd(), true)) {
-            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() - ghost.getSpd(), getTargetPosition()[0], getTargetPosition()[1]);
+            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() - ghost.getSpd(), getTargetPosition().getX(), getTargetPosition().getY());
             if (distance < minDist) {
                 new_xSpd = 0;
                 new_ySpd = -ghost.getSpd();
@@ -64,7 +62,7 @@ public class HouseMode extends GhostState{
             }
         }
         if (ghost.getySpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, ghost.getSpd(), true)) {
-            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() + ghost.getSpd(), getTargetPosition()[0], getTargetPosition()[1]);
+            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() + ghost.getSpd(), getTargetPosition().getX(), getTargetPosition().getY());
             if (distance < minDist) {
                 new_xSpd = 0;
                 new_ySpd = ghost.getSpd();

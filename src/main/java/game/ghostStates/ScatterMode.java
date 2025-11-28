@@ -1,5 +1,6 @@
 package game.ghostStates;
 
+import game.entities.Position;
 import game.entities.ghosts.Ghost;
 
 //유령이 휴식을 취하는 구체적인 상태를 설명하는 클래스
@@ -24,7 +25,7 @@ public class ScatterMode extends GhostState{
     //Dans cet état, la position ciblée dépend de la stratégie du fantôme
     //이 상태에서는 목표 위치는 유령의 전략에 따라 달라집니다.
     @Override
-    public int[] getTargetPosition() {
+    public Position getTargetPosition() {
         return ghost.getStrategy().getScatterTargetPosition();
     }
 }

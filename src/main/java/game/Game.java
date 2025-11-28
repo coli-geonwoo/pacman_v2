@@ -139,6 +139,10 @@ public class Game implements Observer {
         return blinky;
     }
 
+    public static Position getPacmanPosition() {
+        return new Position(pacman.getxPos(), pacman.getyPos());
+    }
+
     //Le jeu est notifiée lorsque Pacman est en contact avec une PacGum, une SuperPacGum ou un fantôme
     //팩맨이 팩덤, 파워 펠릿, 유령과 접촉하면 게임에 알림이 전송됩니다.
     @Override

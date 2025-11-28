@@ -1,5 +1,6 @@
 package game.ghostStates;
 
+import game.entities.Position;
 import game.entities.ghosts.Ghost;
 import game.utils.Utils;
 import jdk.jshell.execution.Util;
@@ -25,12 +26,11 @@ public class FrightenedMode extends GhostState{
     //Dans cet état, la position ciblée est une case aléatoire autour du fantôme
     //이 상태에서는 목표 위치는 고스트 주변의 임의의 셀입니다.
     @Override
-    public int[] getTargetPosition(){
-        int[] position = new int[2];
-
+    public Position getTargetPosition(){
         boolean randomAxis = Utils.randomBool();
-        position[0] = ghost.getxPos() + (randomAxis ? Utils.randomInt(-1,1) * 32 : 0);
-        position[1] = ghost.getyPos() + (!randomAxis ? Utils.randomInt(-1,1) * 32 : 0);
-        return position;
+        return new Position(
+        ghost.getxPos() + (randomAxis ? Utils.randomInt(-1,1) * 32 : 0),
+        ghost.getyPos() + (!randomAxis ? Utils.randomInt(-1,1) * 32 : 0)
+        );
     }
 }
