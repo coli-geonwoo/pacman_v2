@@ -26,25 +26,25 @@ public class FrightenedMode extends GhostState {
         }
     }
 
-    public FrightenedMode(Ghost ghost) {
-        super(ghost);
+    public FrightenedMode() {
+        super();
     }
 
     //유령이 먹혔을 때의 전환
     @Override
-    public void eaten() {
+    public void eaten(Ghost ghost) {
         ghost.switchMode(State.EATEN);
     }
 
     //무서운 상태 타이머가 완료되면 전환
     @Override
-    public void timerFrightenedModeOver() {
+    public void timerFrightenedModeOver(Ghost ghost) {
         ghost.switchChaseModeOrScatterMode();
     }
 
     //이 상태에서는 목표 위치는 고스트 주변의 임의의 셀입니다.
     @Override
-    public Position getTargetPosition() {
+    public Position getTargetPosition(Ghost ghost) {
         boolean randomAxis = Utils.randomBool();
         return new Position(
                 ghost.getxPos() + (randomAxis ? Utils.randomInt(-1, 1) * 32 : 0),

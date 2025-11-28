@@ -154,14 +154,14 @@ public class Game implements Observer {
     public void updateSuperPacGumEaten(SuperPacGum spg) {
         spg.destroy(); //La SuperPacGum est détruite quand Pacman la mange
         for (Ghost gh : ghosts) {
-            gh.getState().superPacGumEaten(); //S'il existe une transition particulière quand une SuperPacGum est mangée, l'état des fantômes change
+            gh.superPacGumEaten(); //S'il existe une transition particulière quand une SuperPacGum est mangée, l'état des fantômes change
         }
     }
 
     @Override
     public void updateGhostCollision(Ghost gh) {
         if (gh.getState() instanceof FrightenedMode) {
-            gh.getState().eaten(); //S'il existe une transition particulière quand le fantôme est mangé, son état change en conséquence
+            gh.eaten(); //S'il existe une transition particulière quand le fantôme est mangé, son état change en conséquence
         }else if (!(gh.getState() instanceof EatenMode)) {
             System.out.println("Game over !\nScore : " + GameLauncher.getUIPanel().getScore()); //Quand Pacman rentre en contact avec un Fantôme qui n'est ni effrayé, ni mangé, c'est game over !
             System.exit(0); //TODO

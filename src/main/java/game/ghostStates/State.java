@@ -6,24 +6,24 @@ import java.util.stream.Stream;
 
 public enum State {
 
-    HOUSE(HouseMode::new),
-    CHASE(ChaseMode::new),
-    SCATTER(ScatterMode::new),
-    EATEN(EatenMode::new),
-    FRIGHTENED(FrightenedMode::new),
+    HOUSE(new HouseMode()),
+    CHASE(new ChaseMode()),
+    SCATTER(new ScatterMode()),
+    EATEN(new EatenMode()),
+    FRIGHTENED(new FrightenedMode()),
     ;
 
-    private final Function<Ghost, GhostState> function;
+    private final GhostState state;
 
-    State(Function<Ghost, GhostState> function) {
-        this.function = function;
+    State(GhostState state) {
+        this.state = state;
     }
 
-    public static GhostState mapToGhostState(Ghost ghost, State state) {
+    public static GhostState mapToGhostState(State state) {
         return Stream.of(values())
                 .filter(value -> value == state)
                 .findAny()
                 .orElseThrow(() -> new RuntimeException(state.name() + "와 일치하는 상태가 없습니다"))
-                .function.apply(ghost);
+                .state;
     }
 }

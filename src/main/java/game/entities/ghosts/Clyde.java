@@ -5,7 +5,6 @@ import game.ghostStrategies.ClydeStrategy;
 //클라이드 구체 등급(노란 유령)
 public class Clyde extends Ghost {
     public Clyde(int xPos, int yPos) {
-        super(xPos, yPos, "clyde.png");
-        setStrategy(new ClydeStrategy(this));
+        super(xPos, yPos, "clyde.png", new ClydeStrategy());
     }
 }
