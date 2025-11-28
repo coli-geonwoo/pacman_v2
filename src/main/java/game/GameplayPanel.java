@@ -8,8 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-//Panneau de la "zone de jeu"
-//"플레이 구역" 표지판
 public class GameplayPanel extends JPanel implements Runnable {
     public static int width;
     public static int height;
@@ -19,9 +17,9 @@ public class GameplayPanel extends JPanel implements Runnable {
     private BufferedImage img;
     private Graphics2D g;
     private Image backgroundImage;
+    private Image scaledBackground; // 미리 스케일링된 배경
 
     private KeyHandler key;
-
     private Game game;
 
     public GameplayPanel(int width, int height) throws IOException {
@@ -30,7 +28,11 @@ public class GameplayPanel extends JPanel implements Runnable {
         setPreferredSize(new Dimension(width, height));
         setFocusable(true);
         requestFocus();
+        setDoubleBuffered(true); // 이중 버퍼링 활성화
+
+        // 배경 이미지 로드 및 미리 스케일링
         backgroundImage = ImageIO.read(getClass().getClassLoader().getResource("img/background.png"));
+        scaledBackground = backgroundImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
     }
 
     @Override
@@ -43,68 +45,66 @@ public class GameplayPanel extends JPanel implements Runnable {
         }
     }
 
-    //게임 초기화
     public void init() {
         running = true;
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         g = (Graphics2D) img.getGraphics();
 
-        key = new KeyHandler(this);
+        // 렌더링 품질 설정 최적화
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
+        key = new KeyHandler(this);
         game = new Game();
     }
 
-    //게임 업데이트
     public void update() {
         game.update();
     }
 
-    //gestion des inputs
-    //입력 관리
     public void input(KeyHandler key) {
         game.input(key);
     }
 
-    //"rendu du jeu" ; on prépare ce qui va être affiché en dessinant sur une "image" : un fond et les entités du jeu au dessus
-//"게임 렌더링"; "이미지"에 그려서 표시할 내용을 준비합니다. 배경과 그 위에 있는 게임 엔터티
     public void render() {
         if (g != null) {
-            g.drawImage(backgroundImage, 0, 0, width, height, null);
+            // 미리 스케일링된 배경 사용
+            g.drawImage(scaledBackground, 0, 0, null);
             game.render(g);
         }
     }
 
-    //게임 표시 : 렌더링을 통해 이미지가 표시됩니다.
-    public void draw() {
-        Graphics g2 = this.getGraphics();
-        g2.drawImage(img, 0, 0, width, height, null);
-        g2.dispose();
+    // paintComponent를 오버라이드하여 Swing의 이중 버퍼링 활용
+    @Override
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+        if (img != null) {
+            graphics.drawImage(img, 0, 0, null);
+        }
     }
 
     @Override
     public void run() {
         init();
 
-        //Pour faire en sorte que le jeu tourne à 60FPS (tutoriel consulté : https://www.youtube.com/watch?v=LhUN3EKZiio)
-        //게임을 60FPS로 실행하려면(튜토리얼 참조: https://www.youtube.com/watch?v=LhUN3EKZiio)
-        final double GAME_HERTZ = 50.0;
-        final double TBU = 1000000000 / GAME_HERTZ; //Time before update
-
-        final int MUBR = 5; // Must update before render
+        final double GAME_HERTZ = 60.0; // 60 FPS로 변경
+        final double TBU = 1000000000.0 / GAME_HERTZ;
+        final int MUBR = 5;
 
         double lastUpdateTime = System.nanoTime();
-        double lastRenderTime;
+        double lastRenderTime = System.nanoTime();
 
-        final double TARGET_FPS = 50.0;
-        final double TTBR = 1000000000 / TARGET_FPS; //Total time before render
+        final double TARGET_FPS = 60.0; // 60 FPS로 변경
+        final double TTBR = 1000000000.0 / TARGET_FPS;
 
         int frameCount = 0;
         int lastSecondTime = (int) (lastUpdateTime / 1000000000);
-        int oldFrameCount = 0;
 
         while (running) {
             double now = System.nanoTime();
             int updateCount = 0;
+
+            // 업데이트 루프
             while ((now - lastUpdateTime) > TBU && (updateCount < MUBR)) {
                 input(key);
                 update();
@@ -116,32 +116,32 @@ public class GameplayPanel extends JPanel implements Runnable {
                 lastUpdateTime = now - TBU;
             }
 
-            render();
-            draw();
-            lastRenderTime = now;
-            frameCount++;
+            // 렌더링
+            if (now - lastRenderTime >= TTBR) {
+                render();
+                repaint(); // paintComponent 호출
+                lastRenderTime = now;
+                frameCount++;
+            }
 
+            // FPS 카운터
             int thisSecond = (int) (lastUpdateTime / 1000000000);
             if (thisSecond > lastSecondTime) {
-                if (frameCount != oldFrameCount) {
-                    //System.out.println("FPS : " + frameCount);
-                    oldFrameCount = frameCount;
-                }
+                System.out.println("FPS: " + frameCount);
                 frameCount = 0;
                 lastSecondTime = thisSecond;
             }
 
-            while ((now - lastRenderTime < TTBR) && (now - lastUpdateTime < TBU)) {
-                Thread.yield();
-
-                try {
-                    Thread.sleep(1);
-                } catch (Exception e) {
-                    System.err.println("ERROR yielding thread");
-                }
-
-                now = System.nanoTime();
+            // CPU 사용률 감소를 위한 대기
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    public void stopGame() {
+        running = false;
     }
 }
