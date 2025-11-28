@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-//Classe abtraite pour décrire une entité mouvante
 //이동하는 엔티티를 설명하는 추상 클래스
 public abstract class MovingEntity extends Entity {
     protected int spd;
@@ -35,6 +34,8 @@ public abstract class MovingEntity extends Entity {
         updatePosition();
     }
 
+
+    //TODO 리패터링
     public void updatePosition() {
         //Mise à jour de la position de l'entité
         //엔티티의 위치 업데이트
@@ -42,7 +43,6 @@ public abstract class MovingEntity extends Entity {
             xPos+=xSpd;
             yPos+=ySpd;
 
-            //En fonction de la direction emprunté, on change la valeur de la direction (un entier permettant de savoir la partie de l'image à afficher notamment)
             //방향에 따라 방향 값이 변경됩니다(이미지의 어느 부분을 표시할지 등을 나타내는 정수)
 
             if (xSpd > 0) {
