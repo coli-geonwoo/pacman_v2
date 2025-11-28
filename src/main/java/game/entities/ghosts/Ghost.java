@@ -121,19 +121,16 @@ public abstract class Ghost extends MovingEntity {
             }
         }
 
-        //Si le fantôme est sur la case juste au dessus de sa maison, l'état est notifié afin d'appliquer la transition adéquate
         //유령이 자신의 집 바로 위 칸에 있는 경우, 해당 주에 알림을 보내 적절한 전환을 적용합니다.
         if (xPos == 208 && yPos == 168) {
             state.outsideHouse();
         }
 
-        //Si le fantôme est sur la case au milieu sa maison, l'état est notifié afin d'appliquer la transition adéquate
         //유령이 집 중앙의 칸에 있는 경우, 해당 상태에 알림을 보내 적절한 전환을 적용합니다.
         if (xPos == 208 && yPos == 200) {
             state.insideHouse();
         }
 
-        //Selon l'état, le fantôme calcule sa prochaine direction, et sa position est ensuite mise à jour
         //유령은 상태에 따라 다음 방향을 계산하고, 그에 따라 위치가 업데이트됩니다.
         state.computeNextDir();
         updatePosition();
@@ -141,19 +138,10 @@ public abstract class Ghost extends MovingEntity {
 
     @Override
     public void render(Graphics2D g) {
-        //Différents sprites sont utilisés selon l'état du fantôme (après réflexion, il aurait peut être été plus judicieux de faire une méthode "render" dans GhostState)
-        //고스트의 상태에 따라 다른 스프라이트가 사용됩니다(반성해 보면 GhostState 내에 "렌더링" 메서드를 만드는 것이 더 현명했을 수도 있음)
-        if (state == frightenedMode) {
-            if (frightenedTimer <= (60 * 5) || frightenedTimer%20 > 10) {
-                g.drawImage(frightenedSprite1.getSubimage((int)subimage * size, 0, size, size), this.xPos, this.yPos,null);
-            }else{
-                g.drawImage(frightenedSprite2.getSubimage((int)subimage * size, 0, size, size), this.xPos, this.yPos,null);
-            }
-        }else if (state == eatenMode) {
-            g.drawImage(eatenSprite.getSubimage(direction * size, 0, size, size), this.xPos, this.yPos,null);
-        }else{
-            g.drawImage(sprite.getSubimage((int)subimage * size + direction * size * nbSubimagesPerCycle, 0, size, size), this.xPos, this.yPos,null);
-        }
+        state.render(g, this);
+    }
 
+    public int getFrightenedTimer() {
+        return frightenedTimer;
     }
 }

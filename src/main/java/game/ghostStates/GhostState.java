@@ -1,9 +1,11 @@
 package game.ghostStates;
 
+import game.entities.MovingEntity;
 import game.entities.Position;
 import game.entities.ghosts.Ghost;
 import game.utils.Utils;
 import game.utils.WallCollisionDetector;
+import java.awt.Graphics2D;
 
 //Classe abstrate pour décrire les différents états de fantômes
 //유령의 다양한 상태를 설명하는 추상 클래스
@@ -94,6 +96,15 @@ public abstract class GhostState {
                 ghost.setySpd(0);
             }
         }
+    }
+
+    public void render(Graphics2D g, Ghost ghost) {
+        g.drawImage(
+                ghost.getSprite().getSubimage((int)ghost.getSubimage() * ghost.getSize() + ghost.getDirection() * ghost.getSize() * ghost.getNbSubimagesPerCycle(), 0, ghost.getSize(), ghost.getSize()),
+                ghost.getxPos(),
+                ghost.getyPos(),
+                null
+        );
     }
 
     public abstract Position getTargetPosition();
