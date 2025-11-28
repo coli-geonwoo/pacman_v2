@@ -2,105 +2,58 @@ package game.entities.ghosts;
 
 import game.Game;
 import game.entities.MovingEntity;
-import game.ghostStates.*;
+import game.ghostStates.ChaseMode;
+import game.ghostStates.EatenMode;
+import game.ghostStates.FrightenedMode;
+import game.ghostStates.GhostState;
+import game.ghostStates.HouseMode;
+import game.ghostStates.ScatterMode;
+import game.ghostStates.State;
 import game.ghostStrategies.IGhostStrategy;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
+import java.awt.Graphics2D;
 
 // 귀신을 묘사하기 위한 추상적인 분류
 public abstract class Ghost extends MovingEntity {
+
     protected GhostState state;
-
-    protected final GhostState chaseMode;
-    protected final GhostState scatterMode;
-    protected final GhostState frightenedMode;
-    protected final GhostState eatenMode;
-    protected final GhostState houseMode;
-
     protected int modeTimer = 0;
     protected int frightenedTimer = 0;
     protected boolean isChasing = false;
-
-    protected static BufferedImage frightenedSprite1;
-    protected static BufferedImage frightenedSprite2;
-    protected static BufferedImage eatenSprite;
-
     protected IGhostStrategy strategy;
 
     public Ghost(int xPos, int yPos, String spriteName) {
         super(32, xPos, yPos, 2, spriteName, 2, 0.1f);
-
-        //유령의 다양한 상태 생성
-        chaseMode = new ChaseMode(this);
-        scatterMode = new ScatterMode(this);
-        frightenedMode = new FrightenedMode(this);
-        eatenMode = new EatenMode(this);
-        houseMode = new HouseMode(this);
-
-        state = houseMode; //초기 상태
-
-        try {
-            frightenedSprite1 = ImageIO.read(getClass().getClassLoader().getResource("img/ghost_frightened.png"));
-            frightenedSprite2 = ImageIO.read(getClass().getClassLoader().getResource("img/ghost_frightened_2.png"));
-            eatenSprite = ImageIO.read(getClass().getClassLoader().getResource("img/ghost_eaten.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        state = State.mapToGhostState(this, State.HOUSE);
     }
 
-    //Méthodes pour les transitions entre les différents états
     //다른 상태 간 전환을 위한 방법
-    public void switchChaseMode() {
-        state = chaseMode;
-    }
-    public void switchScatterMode() {
-        state = scatterMode;
+    public void switchMode(State targetState) {
+        state = State.mapToGhostState(this, targetState);
     }
 
     public void switchFrightenedMode() {
         frightenedTimer = 0;
-        state = frightenedMode;
-    }
-
-    public void switchEatenMode() {
-        state = eatenMode;
-    }
-
-    public void switchHouseMode() {
-        state = houseMode;
+        state = State.mapToGhostState(this, State.FRIGHTENED);
     }
 
     public void switchChaseModeOrScatterMode() {
         if (isChasing) {
-            switchChaseMode();
-        }else{
-            switchScatterMode();
+            switchMode(State.CHASE);
+        } else {
+            switchMode(State.SCATTER);
         }
-    }
-
-    public IGhostStrategy getStrategy() {
-        return this.strategy;
-    }
-
-    public void setStrategy(IGhostStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public GhostState getState() {
-        return state;
     }
 
     @Override
     public void update() {
         //유령은 플레이어가 움직이기 전까지 움직이지 않습니다.
-        if (!Game.getFirstInput()) return;
+        if (!Game.getFirstInput()) {
+            return;
+        }
 
         //Si le fantôme est dans l'état effrayé, un timer de 7s se lance, et l'état sera notifié ensuite afin d'appliquer la transition adéquate
         //유령이 겁먹은 상태이면 7초 타이머가 시작되고, 그 상태를 감지하여 적절한 전환을 적용합니다.
-        if (state == frightenedMode) {
+        if (state.isSame(State.FRIGHTENED)) {
             frightenedTimer++;
 
             if (frightenedTimer >= (60 * 7)) {
@@ -112,7 +65,7 @@ public abstract class Ghost extends MovingEntity {
         //Si le fantôme est dans l'état chaseMode ou scatterMode, un timer se lance, et au bout de 5s ou 20s selon l'état, l'état est notifié ensuite afin d'appliquer la transition adéquate
         //유령은 타이머를 사용하여 chaseMode와 scatterMode 사이를 번갈아 가며 작동합니다.
         //고스트가 chaseMode나 scatterMode에 있는 경우 타이머가 시작되고, 상태에 따라 5초 또는 20초 후에 해당 상태에 알림이 전송되어 적절한 전환이 적용됩니다.
-        if (state == chaseMode || state == scatterMode) {
+        if (state.isSame(State.CHASE) || state.isSame(State.SCATTER)) {
             modeTimer++;
 
             if ((isChasing && modeTimer >= (60 * 20)) || (!isChasing && modeTimer >= (60 * 5))) {
@@ -143,5 +96,17 @@ public abstract class Ghost extends MovingEntity {
 
     public int getFrightenedTimer() {
         return frightenedTimer;
+    }
+
+    public IGhostStrategy getStrategy() {
+        return this.strategy;
+    }
+
+    public void setStrategy(IGhostStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public GhostState getState() {
+        return state;
     }
 }

@@ -31,7 +31,7 @@ public class EatenMode extends GhostState{
     //유령이 집으로 돌아올 때의 전환
     @Override
     public void insideHouse() {
-        ghost.switchHouseMode();
+        ghost.switchMode(State.HOUSE);
     }
 
     //이 상태에서는 목표 위치는 유령집 중앙의 정사각형입니다.
@@ -108,5 +108,10 @@ public class EatenMode extends GhostState{
         int yPos = ghost.getyPos();
         int direction = ghost.getDirection();
         g.drawImage(EATEN_SPRITE.getSubimage(direction * size, 0, size, size), xPos, yPos,null);
+    }
+
+    @Override
+    public State getState() {
+        return State.EATEN;
     }
 }

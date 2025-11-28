@@ -85,4 +85,9 @@ public class HouseMode extends GhostState{
             }
         }
     }
+
+    @Override
+    public State getState() {
+        return State.HOUSE;
+    }
 }

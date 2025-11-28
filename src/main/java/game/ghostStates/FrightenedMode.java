@@ -33,7 +33,7 @@ public class FrightenedMode extends GhostState {
     //유령이 먹혔을 때의 전환
     @Override
     public void eaten() {
-        ghost.switchEatenMode();
+        ghost.switchMode(State.EATEN);
     }
 
     //무서운 상태 타이머가 완료되면 전환
@@ -65,5 +65,10 @@ public class FrightenedMode extends GhostState {
         } else {
             g.drawImage(FRIGHTEN_SPRITE_TWO.getSubimage(subimage * size, 0, size, size), xPos, yPos, null);
         }
+    }
+
+    @Override
+    public State getState() {
+        return State.FRIGHTENED;
     }
 }

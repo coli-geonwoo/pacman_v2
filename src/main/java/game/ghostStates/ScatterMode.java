@@ -19,7 +19,7 @@ public class ScatterMode extends GhostState{
     //현재 상태 타이머가 완료되면 전환합니다(ChaseMode와 ScatterMode 사이를 번갈아 가며 전환합니다)
     @Override
     public void timerModeOver() {
-        ghost.switchChaseMode();
+        ghost.switchMode(State.CHASE);
     }
 
     //Dans cet état, la position ciblée dépend de la stratégie du fantôme
@@ -27,5 +27,10 @@ public class ScatterMode extends GhostState{
     @Override
     public Position getTargetPosition() {
         return ghost.getStrategy().getScatterTargetPosition();
+    }
+
+    @Override
+    public State getState() {
+        return State.SCATTER;
     }
 }

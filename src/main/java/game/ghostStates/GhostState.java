@@ -107,6 +107,12 @@ public abstract class GhostState {
         );
     }
 
+    public boolean isSame(State state) {
+        return this.getState() == state;
+    }
+
     public abstract Position getTargetPosition();
+
+    public abstract State getState();
 
 }
