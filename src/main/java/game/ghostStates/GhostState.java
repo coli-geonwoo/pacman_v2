@@ -13,7 +13,6 @@ public abstract class GhostState {
         this.ghost = ghost;
     }
 
-    //Différentes transitions possibles d'un état vers un autre
     //한 상태에서 다른 상태로의 다양한 가능한 전환
     public void superPacGumEaten() {}
     public void timerModeOver() {}
@@ -22,12 +21,6 @@ public abstract class GhostState {
     public void outsideHouse() {}
     public void insideHouse() {}
 
-    public int[] getTargetPosition(){
-        //고스트가 타겟으로 삼을 지점을 반환합니다.
-        return new int[2];
-    } //retourne le point que va cibler le fantôme
-
-    //Méthode pour calculer la prochaine direction que le fantôme va prendre
     //유령이 이동할 다음 방향을 계산하는 방법
     public void computeNextDir() {
         int new_xSpd = 0;
@@ -101,4 +94,6 @@ public abstract class GhostState {
             }
         }
     }
+
+    public abstract int[] getTargetPosition();
 }
