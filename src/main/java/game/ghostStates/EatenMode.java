@@ -40,68 +40,6 @@ public class EatenMode extends GhostState{
         return new Position(208, 200);
     }
 
-    //Même chose que la méthode de la classe abstraite, mais on ignore ici les collisions avec les murs de la maison des fantômes
-    //추상 클래스 메서드와 동일하지만 여기서는 유령 집의 벽과의 충돌을 무시합니다.
-    @Override
-    public void computeNextDir(Ghost ghost) {
-        int new_xSpd = 0;
-        int new_ySpd = 0;
-
-        if (!ghost.onTheGrid()) return;
-        if (!ghost.onGameplayWindow()) return;
-
-        double minDist = Double.MAX_VALUE;
-        Position targetPosition = getTargetPosition(ghost);
-
-        if (ghost.getxSpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, -ghost.getSpd(), 0, true)) {
-            double distance = Utils.getDistance(ghost.getxPos() - ghost.getSpd(), ghost.getyPos(), targetPosition.getX(), targetPosition.getY());
-            if (distance < minDist) {
-                new_xSpd = -ghost.getSpd();
-                new_ySpd = 0;
-                minDist = distance;
-            }
-        }
-        if (ghost.getxSpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, ghost.getSpd(), 0, true)) {
-            double distance = Utils.getDistance(ghost.getxPos() + ghost.getSpd(), ghost.getyPos(),  targetPosition.getX(), targetPosition.getY());
-            if (distance < minDist) {
-                new_xSpd = ghost.getSpd();
-                new_ySpd = 0;
-                minDist = distance;
-            }
-        }
-        if (ghost.getySpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, -ghost.getSpd(), true)) {
-            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() - ghost.getSpd(), targetPosition.getX(), targetPosition.getY());
-            if (distance < minDist) {
-                new_xSpd = 0;
-                new_ySpd = -ghost.getSpd();
-                minDist = distance;
-            }
-        }
-        if (ghost.getySpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, ghost.getSpd(), true)) {
-            double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() + ghost.getSpd(), targetPosition.getX(), targetPosition.getY());
-            if (distance < minDist) {
-                new_xSpd = 0;
-                new_ySpd = ghost.getSpd();
-                minDist = distance;
-            }
-        }
-
-        if (new_xSpd == 0 && new_ySpd == 0) return;
-
-        if (java.lang.Math.abs(new_xSpd) != java.lang.Math.abs(new_ySpd)) {
-            ghost.setxSpd(new_xSpd);
-            ghost.setySpd(new_ySpd);
-        } else {
-            if (ghost.getxSpd() != 0) {
-                ghost.setxSpd(0);
-                ghost.setxSpd(new_ySpd);
-            }else{
-                ghost.setxSpd(new_xSpd);
-                ghost.setySpd(0);
-            }
-        }
-    }
-
     @Override
     public void render(Graphics2D g, Ghost ghost) {
         int size = ghost.getSize();
@@ -114,5 +52,10 @@ public class EatenMode extends GhostState{
     @Override
     public State getState() {
         return State.EATEN;
+    }
+
+    @Override
+    public boolean ignoreGhostHouses() {
+        return true;
     }
 }

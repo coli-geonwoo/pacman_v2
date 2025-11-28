@@ -44,13 +44,11 @@ public abstract class GhostState {
         double minDist = Double.MAX_VALUE; //유령과 대상 사이의 최소 현재 거리는 다음 방향에 따라 달라집니다.
 
         //유령이 현재 왼쪽으로 이동하고 있고 왼쪽에 벽이 없다면...
-        if (ghost.getxSpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, -ghost.getSpd(), 0)) {
-            //On regarde la distance entre la position ciblée et la position potentielle du fantôme si ce dernier irait vers la gauche
+        if (ghost.getxSpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, -ghost.getSpd(), 0, ignoreGhostHouses())) {
             //우리는 유령이 왼쪽으로 이동한다면 목표 위치와 유령의 잠재적 위치 사이의 거리를 살펴봅니다.
             double distance = Utils.getDistance(ghost.getxPos() - ghost.getSpd(), ghost.getyPos(),
                     getTargetPosition(ghost).getX(), getTargetPosition(ghost).getY());
 
-            //Si cette distance est inférieure à la distance minimale courante, on dit que le fantôme va vers la gauche et on met à jour la distance minimale
             //이 거리가 현재 최소 거리보다 작으면 유령이 왼쪽으로 이동한다고 말하고 최소 거리를 업데이트합니다.
             if (distance < minDist) {
                 new_xSpd = -ghost.getSpd();
@@ -61,7 +59,7 @@ public abstract class GhostState {
 
         //Même chose en testant vers la droite
         //오른쪽으로 테스트할 때도 마찬가지입니다.
-        if (ghost.getxSpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, ghost.getSpd(), 0)) {
+        if (ghost.getxSpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, ghost.getSpd(), 0, ignoreGhostHouses())) {
             double distance = Utils.getDistance(ghost.getxPos() + ghost.getSpd(), ghost.getyPos(),
                     getTargetPosition(ghost).getX(), getTargetPosition(ghost).getY());
             if (distance < minDist) {
@@ -72,7 +70,7 @@ public abstract class GhostState {
         }
 
         //위쪽으로 테스트할 때도 마찬가지입니다.
-        if (ghost.getySpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, -ghost.getSpd())) {
+        if (ghost.getySpd() <= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, -ghost.getSpd(), ignoreGhostHouses())) {
             double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() - ghost.getSpd(),
                     getTargetPosition(ghost).getX(), getTargetPosition(ghost).getY());
             if (distance < minDist) {
@@ -83,7 +81,7 @@ public abstract class GhostState {
         }
 
         //아래로 테스트할 때도 마찬가지입니다.
-        if (ghost.getySpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, ghost.getSpd())) {
+        if (ghost.getySpd() >= 0 && !WallCollisionDetector.checkWallCollision(ghost, 0, ghost.getSpd(), ignoreGhostHouses())) {
             double distance = Utils.getDistance(ghost.getxPos(), ghost.getyPos() + ghost.getSpd(),
                     getTargetPosition(ghost).getX(), getTargetPosition(ghost).getY());
             if (distance < minDist) {
@@ -97,7 +95,6 @@ public abstract class GhostState {
             return;
         }
 
-        //Une fois tous les cas testés, on change la direction du fantôme (au cas où, comme cette direction est définie par une vitesse horizontale et une vitesse verticale, on fait quand même une vérification afin qu'il ne puisse pas aller en diagonale)
         //모든 케이스가 테스트된 후, 고스트의 방향을 변경합니다(이 방향은 수평 속도와 수직 속도로 정의되므로 대각선으로 이동할 수 없도록 검사를 수행합니다)
         if (Math.abs(new_xSpd) != Math.abs(new_ySpd)) {
             ghost.setxSpd(new_xSpd);
@@ -131,5 +128,9 @@ public abstract class GhostState {
     public abstract Position getTargetPosition(Ghost ghost);
 
     public abstract State getState();
+
+    public boolean ignoreGhostHouses() {
+        return false;
+    }
 
 }
