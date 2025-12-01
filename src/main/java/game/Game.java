@@ -47,7 +47,6 @@ public class Game implements Observer {
         CollisionDetector collisionDetector = new CollisionDetector(this);
         AbstractGhostFactory abstractGhostFactory = null;
 
-        //Le niveau a une "grille", et pour chaque case du fichier csv, on affiche une entité parculière sur une case de la grille selon le caracère présent
         //레벨에는 "격자"가 있으며 CSV 파일의 각 셀에 대해 현재 캐릭터에 따라 특정 엔터티가 격자의 셀에 표시됩니다.
         for(int xx = 0 ; xx < cellsPerRow ; xx++) {
             for(int yy = 0 ; yy < cellsPerColumn ; yy++) {
@@ -110,7 +109,6 @@ public class Game implements Observer {
         return objects;
     }
 
-    //Mise à jour de toutes les entités
     //모든 엔터티 업데이트
     public void update() {
         for (Entity o: objects) {
@@ -118,13 +116,11 @@ public class Game implements Observer {
         }
     }
 
-    //Gestion des inputs
     //입력 관리
     public void input(KeyHandler k) {
         pacman.input(k);
     }
 
-    //Rendu de toutes les entités
     //모든 엔터티의 렌더링
     public void render(Graphics2D g) {
         for (Entity o: objects) {
@@ -143,7 +139,6 @@ public class Game implements Observer {
         return new Position(pacman.getxPos(), pacman.getyPos());
     }
 
-    //Le jeu est notifiée lorsque Pacman est en contact avec une PacGum, une SuperPacGum ou un fantôme
     //팩맨이 팩덤, 파워 펠릿, 유령과 접촉하면 게임에 알림이 전송됩니다.
     @Override
     public void updatePacGumEaten(PacGum pg) {
@@ -164,7 +159,7 @@ public class Game implements Observer {
             gh.eaten(); //S'il existe une transition particulière quand le fantôme est mangé, son état change en conséquence
         }else if (!(gh.getState() instanceof EatenMode)) {
             System.out.println("Game over !\nScore : " + GameLauncher.getUIPanel().getScore()); //Quand Pacman rentre en contact avec un Fantôme qui n'est ni effrayé, ni mangé, c'est game over !
-            System.exit(0); //TODO
+            System.exit(0); //TODO 다시 시작 표현
         }
     }
 
