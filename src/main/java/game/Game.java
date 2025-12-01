@@ -88,6 +88,8 @@ public class Game implements Observer {
                     objects.add(new SuperPacGum(xx * cellSize, yy * cellSize));
                 }else if (dataChar.equals("-")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
                     objects.add(new GhostHouse(xx * cellSize, yy * cellSize));
+                }else if (dataChar.equals("h")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
+                    objects.add(new Cherry(xx * cellSize, yy * cellSize));
                 }
             }
         }
@@ -143,6 +145,11 @@ public class Game implements Observer {
     @Override
     public void updatePacGumEaten(PacGum pg) {
         pg.destroy(); //La PacGum est détruite quand Pacman la mange
+    }
+
+    @Override
+    public void updateCherry(Cherry c) {
+        c.destroy();
     }
 
     @Override

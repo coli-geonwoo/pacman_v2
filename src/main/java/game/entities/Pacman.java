@@ -51,9 +51,16 @@ public class Pacman extends MovingEntity implements Sujet {
         super.updateSpeed(updateSpeeds);
     }
 
+
+    //TODO 다형성 활용하는 방식으로 변경
     @Override
     public void update() {
         //우리는 팩맨이 팩덤, 파워 팩덤, 유령과 접촉하는지 매번 확인하고, 관찰자들에게 그에 따른 알림을 보냅니다.
+        Cherry cherry = (Cherry) collisionDetector.checkCollision(this, Cherry.class);
+        if (cherry != null) {
+            notifyObserverCherryEaten(cherry);
+        }
+
         PacGum pg = (PacGum) collisionDetector.checkCollision(this, PacGum.class);
         if (pg != null) {
             notifyObserverPacGumEaten(pg);
@@ -92,6 +99,11 @@ public class Pacman extends MovingEntity implements Sujet {
     @Override
     public void notifyObserverPacGumEaten(PacGum pg) {
         observerCollection.forEach(obs -> obs.updatePacGumEaten(pg));
+    }
+
+    @Override
+    public void notifyObserverCherryEaten(Cherry cherry) {
+        observerCollection.forEach(obs -> obs.updateCherry(cherry));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package game;
 
+import game.entities.Cherry;
 import game.entities.PacGum;
 import game.entities.SuperPacGum;
 import game.entities.ghosts.Ghost;
@@ -36,11 +37,15 @@ public class UIPanel extends JPanel implements Observer {
         return score;
     }
 
-    //L'interface est notifiée lorsque Pacman est en contact avec une PacGum, une SuperPacGum ou un fantôme, et on met à jour le score affiché en conséquence
     //팩맨이 팩덤, 파워 팩덤 또는 유령과 접촉하면 인터페이스에 알림이 전송되고, 표시되는 점수도 그에 따라 업데이트됩니다.
     @Override
     public void updatePacGumEaten(PacGum pg) {
         updateScore(10);
+    }
+
+    @Override
+    public void updateCherry(Cherry c) {
+        updateScore(200);;
     }
 
     @Override
