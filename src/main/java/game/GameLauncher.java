@@ -7,6 +7,7 @@ import java.io.IOException;
 public class GameLauncher {
     private static UIPanel uiPanel;
     private static String[] selectedGhosts;
+    private static int lives;
     private static JFrame window;
     private static GameplayPanel gameplayPanel;
 
@@ -28,6 +29,7 @@ public class GameLauncher {
 
         // 선택된 유령들 저장
         selectedGhosts = dialog.getSelectedGhosts();
+        lives = dialog.getLives();
         tempFrame.dispose();
 
         window = new JFrame();
@@ -47,13 +49,11 @@ public class GameLauncher {
 
         //UI 생성(점수 표시용)
         if (uiPanel == null) {
-            uiPanel = new UIPanel(256, 496);
+            uiPanel = new UIPanel(256, 496, lives);
         } else {
             uiPanel.resetScore();  // 기존 UI면 점수만 초기화
         }
         gameWindow.add(uiPanel);
-//        uiPanel = new UIPanel(256,496);
-//        gameWindow.add(uiPanel);
 
         window.setContentPane(gameWindow);
         window.setResizable(false);
@@ -87,5 +87,9 @@ public class GameLauncher {
 
     public static String[] getSelectedGhosts() {
         return selectedGhosts;
+    }
+
+    public static int getLives() {
+        return lives;
     }
 }

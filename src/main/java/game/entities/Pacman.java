@@ -18,6 +18,9 @@ import javax.imageio.ImageIO;
 //팩맨을 설명하는 클래스
 public class Pacman extends MovingEntity implements Sujet {
 
+    private boolean isGodMode;
+    private int godModeTimer = 0;
+    private int life = 0;
     private int frameCount = 0;
     private int monsterModeTimer = 0;
     private boolean isMonsterMode = false;
@@ -28,10 +31,11 @@ public class Pacman extends MovingEntity implements Sujet {
     private BufferedImage monsterModeSprite;
 
 
-    public Pacman(int xPos, int yPos) {
+    public Pacman(int xPos, int yPos, int life) {
         super(32, xPos, yPos, 2, "pacman.png", 4, 0.3f);
         observerCollection = new ArrayList<>();
         entityNotifyMapper = new EntityNotifyMapper();
+        this.life = life;
         try {
             this.monsterModeSprite = ImageIO.read(getClass().getClassLoader().getResource("img/monster_pacman.png"));
         } catch (IOException e) {
@@ -52,7 +56,6 @@ public class Pacman extends MovingEntity implements Sujet {
             return; //팩맨은 플레이 영역에 있어야 합니다.
         }
 
-        //Selon les touches appuyées, la direction de pacman change en conséquence
         //누르는 키에 따라 팩맨의 방향이 달라집니다.
         if (k.k_left.isPressed && getxSpd() >= 0 && !WallCollisionDetector.checkWallCollision(this, -spd, 0)) {
             new_xSpd = -spd;
@@ -83,7 +86,14 @@ public class Pacman extends MovingEntity implements Sujet {
         if(isMonsterMode) {
             monsterModeTimer++;
             if(monsterModeTimer >= 10*60) {
-                offMonsterMode();
+                isMonsterMode = false;
+            }
+        }
+
+        if(isGodMode) {
+            godModeTimer++;
+            if(godModeTimer >= 5 * 60) {
+                isGodMode = false;
             }
         }
 
@@ -109,12 +119,38 @@ public class Pacman extends MovingEntity implements Sujet {
                     getxPos(), getyPos(), null);
             return;
         }
+
+        if(isGodMode) {
+            if(frameCount % 10 < 5) {
+                g.drawImage(sprite.getSubimage((int) subimage * size + direction * size * nbSubimagesPerCycle, 0, size,
+                                size),
+                        getxPos(), getyPos(), null);
+            }
+            return;
+        }
+
         g.drawImage(sprite.getSubimage((int) subimage * size + direction * size * nbSubimagesPerCycle, 0, size, size),
                 getxPos(), getyPos(), null);
     }
 
+    public void decreaseLife() {
+        this.life -= 1;
+    }
+
+    public boolean isLastLife() {
+        return this.life == 1;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
     public boolean isMonsterMode() {
         return isMonsterMode;
+    }
+
+    public boolean isGodMode() {
+        return isGodMode;
     }
 
     public void switchMonsterMode() {
@@ -126,8 +162,13 @@ public class Pacman extends MovingEntity implements Sujet {
         monsterModeTimer = 0;
     }
 
-    public void offMonsterMode() {
-        isMonsterMode = false;
+    public void switchGameMode() {
+        if (isGodMode) {
+            godModeTimer = 0;
+            return;
+        }
+        isGodMode = true;
+        godModeTimer = 0;
     }
 
     public void setCollisionDetector(CollisionDetector collisionDetector) {

@@ -5,8 +5,8 @@ import game.entities.MonsterPacGum;
 import game.entities.PacGum;
 import game.entities.SuperPacGum;
 import game.entities.ghosts.Ghost;
-import game.ghostStates.FrightenedMode;
 
+import game.ghostStates.State;
 import javax.swing.*;
 import java.awt.*;
 
@@ -15,17 +15,24 @@ public class UIPanel extends JPanel implements Observer {
     public static int height;
 
     private int score = 0;
+    private int pacManLifes = 0;
     private JLabel scoreLabel;
+    private JLabel lifeLabel;
 
-    public UIPanel(int width, int height) {
+    public UIPanel(int width, int height, int pacManLifes) {
         this.width = width;
         this.height = height;
+        this.pacManLifes = pacManLifes;
         setPreferredSize(new Dimension(width, height));
         this.setBackground(Color.black);
         scoreLabel = new JLabel("Score: " + score);
+        lifeLabel = new JLabel("Life: " + pacManLifes);
         scoreLabel.setFont(scoreLabel.getFont().deriveFont(20.0F));
+        lifeLabel.setFont(scoreLabel.getFont().deriveFont(20.0F));
         scoreLabel.setForeground(Color.white);
+        lifeLabel.setForeground(Color.white);
         this.add(scoreLabel, BorderLayout.WEST);
+        this.add(lifeLabel, BorderLayout.WEST);
     }
 
     public void updateScore(int incrScore) {
@@ -55,10 +62,12 @@ public class UIPanel extends JPanel implements Observer {
 
     @Override
     public void updateGhostCollision(Ghost gh) {
-        //팩맨이 유령과 접촉하면 유령이 "겁먹은" 모드에 있을 때만 점수가 업데이트됩니다.
-        if (gh.getState() instanceof FrightenedMode) { //Dans le cas où Pacman est en contact avec un fantôme on ne met à jour le score que lorsque ce dernier est en mode "frightened"
+        if (gh.isState(State.FRIGHTENED)) {
             updateScore(500);
         }
+        this.pacManLifes = Game.getPacman().getLife();
+        this.lifeLabel.setText("Life: " + this.pacManLifes);
+
     }
 
     @Override

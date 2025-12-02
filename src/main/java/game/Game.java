@@ -6,6 +6,8 @@ import game.entities.ghosts.Ghost;
 import game.ghostFactory.*;
 import game.ghostStates.EatenMode;
 import game.ghostStates.FrightenedMode;
+import game.ghostStates.GhostState;
+import game.ghostStates.State;
 import game.utils.CollisionDetector;
 import game.utils.CsvReader;
 import game.utils.KeyHandler;
@@ -30,7 +32,7 @@ public class Game implements Observer {
 
     private static boolean firstInput = false;
 
-    public Game(){
+    public Game() {
         //게임 초기화
         isGameOver = false;
         firstInput = false;
@@ -55,6 +57,8 @@ public class Game implements Observer {
         AbstractGhostFactory abstractGhostFactory = null;
 
         String[] selectedGhosts = GameLauncher.getSelectedGhosts();
+        int lives  = GameLauncher.getLives();
+
         int ghostIndex = 0;
 
         //레벨에는 "격자"가 있으며 CSV 파일의 각 셀에 대해 현재 캐릭터에 따라 특정 엔터티가 격자의 셀에 표시됩니다.
@@ -64,16 +68,16 @@ public class Game implements Observer {
                 if (dataChar.equals("x")) { //Création des murs //벽의 생성
                     objects.add(new Wall(xx * cellSize, yy * cellSize));
                 }else if (dataChar.equals("P")) { //Création de Pacman
-                    pacman = new Pacman(xx * cellSize, yy * cellSize);
+                    pacman = new Pacman(xx * cellSize, yy * cellSize, lives);
                     pacman.setCollisionDetector(collisionDetector);
 
-                    //Enregistrement des différents observers de Pacman
                     //다양한 Pacman 관찰자들의 기록
                     pacman.registerObserver(GameLauncher.getUIPanel());
                     pacman.registerObserver(this);
                 }else if (dataChar.equals("g")) {
                     String selectedGhost = selectedGhosts[ghostIndex];
                     Position position = GhostPosition.values()[ghostIndex++].getPosition();
+                    System.out.println(position.getX() + " " + position.getY());
                     switch (selectedGhost) {
                         case "blinky":
                             abstractGhostFactory = new BlinkyFactory();
@@ -185,9 +189,20 @@ public class Game implements Observer {
 
     @Override
     public void updateGhostCollision(Ghost gh) {
-        if (gh.getState() instanceof FrightenedMode || pacman.isMonsterMode()) {
+        if(pacman.isGodMode()) {
+            return;
+        }
+
+        if (gh.isState(State.FRIGHTENED) || pacman.isMonsterMode()) {
             gh.eaten();
         } else if (!(gh.getState() instanceof EatenMode)) {
+            //마지막 생명이 아니면 > 생명 깎고 갓모드 전환
+            if(!pacman.isLastLife()) {
+                pacman.decreaseLife();
+                pacman.switchGameMode();
+                return;
+            }
+
             // 이미 게임 오버 처리 중이면 리턴
             if (Game.isGameOver) {
                 return;

@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 public class GhostSelectionDialog extends JDialog {
     private String[] selectedGhosts = new String[4];
     private boolean confirmed = false;
+    private int lives = 3;
+    private JSpinner livesSpinner;
 
     private JComboBox<String>[] ghostComboBoxes;
 
@@ -17,7 +19,7 @@ public class GhostSelectionDialog extends JDialog {
 
         // 메인 패널
         JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(5, 2, 10, 10));
+        mainPanel.setLayout(new GridLayout(6, 2, 10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // 유령 타입 옵션
@@ -45,6 +47,17 @@ public class GhostSelectionDialog extends JDialog {
         mainPanel.add(new JLabel()); // 빈 공간
         mainPanel.add(infoLabel);
 
+        JLabel livesLabel = new JLabel("팩맨 생명 개수 :");
+        livesLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(3, 1, 10, 1);
+        livesSpinner = new JSpinner(spinnerModel);
+        livesSpinner.setFont(new Font("Arial", Font.PLAIN, 14));
+        ((JSpinner.DefaultEditor) livesSpinner.getEditor()).getTextField().setFont(new Font("Arial", Font.PLAIN, 14));
+
+        mainPanel.add(livesLabel);
+        mainPanel.add(livesSpinner);
+
         // 버튼 패널
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
@@ -59,6 +72,7 @@ public class GhostSelectionDialog extends JDialog {
                 for (int i = 0; i < 4; i++) {
                     selectedGhosts[i] = ((String) ghostComboBoxes[i].getSelectedItem()).toLowerCase();
                 }
+                lives = (Integer) livesSpinner.getValue();
                 confirmed = true;
                 dispose();
             }
@@ -79,6 +93,10 @@ public class GhostSelectionDialog extends JDialog {
 
     public String[] getSelectedGhosts() {
         return selectedGhosts;
+    }
+
+    public int getLives() {
+        return lives;
     }
 
     public boolean isConfirmed() {

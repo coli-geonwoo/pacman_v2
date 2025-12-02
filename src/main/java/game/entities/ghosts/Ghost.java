@@ -96,6 +96,10 @@ public abstract class Ghost extends MovingEntity {
         state.render(g, this);
     }
 
+    public boolean isState(State state) {
+        return this.state.isSame(state);
+    }
+
     public int getFrightenedTimer() {
         return frightenedTimer;
     }
