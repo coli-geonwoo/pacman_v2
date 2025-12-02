@@ -11,6 +11,8 @@ import java.io.IOException;
 public class GameplayPanel extends JPanel implements Runnable {
     public static int width;
     public static int height;
+    private static int updateCount = 0;
+
     private Thread thread;
     private boolean running = false;
 
@@ -102,7 +104,7 @@ public class GameplayPanel extends JPanel implements Runnable {
 
         while (running) {
             double now = System.nanoTime();
-            int updateCount = 0;
+            updateCount = 0;
 
             // 업데이트 루프
             while ((now - lastUpdateTime) > TBU && (updateCount < MUBR)) {

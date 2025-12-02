@@ -13,7 +13,8 @@ public class EntityNotifyMapper {
                 new CherryNotifier(),
                 new GhostNotifier(),
                 new PacGumNotifier(),
-                new SuperPacGumNotifier()
+                new SuperPacGumNotifier(),
+                new MonsterPacGumNotifier()
         );
     }
 

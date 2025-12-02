@@ -1,6 +1,7 @@
 package game;
 
 import game.entities.Cherry;
+import game.entities.MonsterPacGum;
 import game.entities.PacGum;
 import game.entities.SuperPacGum;
 import game.entities.ghosts.Ghost;
@@ -9,7 +10,6 @@ import game.ghostStates.FrightenedMode;
 import javax.swing.*;
 import java.awt.*;
 
-//Panneau de l'interface utilisateur
 public class UIPanel extends JPanel implements Observer {
     public static int width;
     public static int height;
@@ -59,6 +59,11 @@ public class UIPanel extends JPanel implements Observer {
         if (gh.getState() instanceof FrightenedMode) { //Dans le cas où Pacman est en contact avec un fantôme on ne met à jour le score que lorsque ce dernier est en mode "frightened"
             updateScore(500);
         }
+    }
+
+    @Override
+    public void updateMonsterPacGumEaten(MonsterPacGum monster) {
+
     }
 
     public void resetScore() {

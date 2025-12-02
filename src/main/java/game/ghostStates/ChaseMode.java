@@ -1,5 +1,7 @@
 package game.ghostStates;
 
+import game.Game;
+import game.entities.Pacman;
 import game.entities.Position;
 import game.entities.ghosts.Ghost;
 
@@ -26,6 +28,14 @@ public class ChaseMode extends GhostState{
     @Override
     public Position getTargetPosition(Ghost ghost) {
         return ghost.getChaseTargetPosition();
+    }
+
+    @Override
+    public void eaten(Ghost ghost) {
+        Pacman pacman = Game.getPacman();
+        if(pacman.isMonsterMode()) {
+            ghost.switchMode(State.EATEN);
+        }
     }
 
     @Override

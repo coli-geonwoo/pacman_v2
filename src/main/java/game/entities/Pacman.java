@@ -4,24 +4,40 @@ import game.Game;
 import game.Observer;
 import game.Sujet;
 import game.entities.direction.Speeds;
-import game.entities.ghosts.Ghost;
 import game.entities.notifier.EntityNotifyMapper;
 import game.utils.CollisionDetector;
 import game.utils.KeyHandler;
 import game.utils.WallCollisionDetector;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 //팩맨을 설명하는 클래스
 public class Pacman extends MovingEntity implements Sujet {
+
+    private int frameCount = 0;
+    private int monsterModeTimer = 0;
+    private boolean isMonsterMode = false;
     private CollisionDetector collisionDetector;
     private List<Observer> observerCollection;
     private EntityNotifyMapper entityNotifyMapper;
+
+    private BufferedImage monsterModeSprite;
+
 
     public Pacman(int xPos, int yPos) {
         super(32, xPos, yPos, 2, "pacman.png", 4, 0.3f);
         observerCollection = new ArrayList<>();
         entityNotifyMapper = new EntityNotifyMapper();
+        try {
+            this.monsterModeSprite = ImageIO.read(getClass().getClassLoader().getResource("img/monster_pacman.png"));
+        } catch (IOException e) {
+            throw new RuntimeException("팩맨 이미지 로드 과정에서 문제가 생겼습니다");
+        }
+
     }
 
     //여행 관리
@@ -64,6 +80,14 @@ public class Pacman extends MovingEntity implements Sujet {
 
     @Override
     public void update() {
+        if(isMonsterMode) {
+            monsterModeTimer++;
+            if(monsterModeTimer >= 10*60) {
+                offMonsterMode();
+            }
+        }
+
+        frameCount++;
 
         //모든 충돌 객체 가져오기 > 객체들에게 알림 발송
         List<Entity> allCollisionEntities = collisionDetector.getAllCollisionEntities(this);
@@ -73,6 +97,37 @@ public class Pacman extends MovingEntity implements Sujet {
         if (!WallCollisionDetector.checkWallCollision(this, getxSpd(), getySpd())) {
             updatePosition();
         }
+    }
+
+
+    //monsterMode일 때와 다르게
+    @Override
+    public void render(Graphics2D g) {
+        if (isMonsterMode && frameCount % 10 < 5) {
+            g.drawImage(monsterModeSprite.getSubimage((int) subimage * size + direction * size * nbSubimagesPerCycle, 0,
+                            size, size),
+                    getxPos(), getyPos(), null);
+            return;
+        }
+        g.drawImage(sprite.getSubimage((int) subimage * size + direction * size * nbSubimagesPerCycle, 0, size, size),
+                getxPos(), getyPos(), null);
+    }
+
+    public boolean isMonsterMode() {
+        return isMonsterMode;
+    }
+
+    public void switchMonsterMode() {
+        if (isMonsterMode) {
+            monsterModeTimer = 0;
+            return;
+        }
+        isMonsterMode = true;
+        monsterModeTimer = 0;
+    }
+
+    public void offMonsterMode() {
+        isMonsterMode = false;
     }
 
     public void setCollisionDetector(CollisionDetector collisionDetector) {

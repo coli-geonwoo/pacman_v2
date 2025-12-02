@@ -1,6 +1,7 @@
 package game;
 
 import game.entities.Cherry;
+import game.entities.MonsterPacGum;
 import game.entities.PacGum;
 import game.entities.SuperPacGum;
 import game.entities.ghosts.Ghost;
@@ -11,4 +12,5 @@ public interface Observer {
     void updateCherry(Cherry c);
     void updateSuperPacGumEaten(SuperPacGum spg);
     void updateGhostCollision(Ghost gh);
+    void updateMonsterPacGumEaten(MonsterPacGum monster);
 }

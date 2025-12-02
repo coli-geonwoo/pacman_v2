@@ -102,6 +102,8 @@ public class Game implements Observer {
                     objects.add(new GhostHouse(xx * cellSize, yy * cellSize));
                 }else if (dataChar.equals("h")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
                     objects.add(new Cherry(xx * cellSize, yy * cellSize));
+                }else if (dataChar.equals("m")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
+                    objects.add(new MonsterPacGum(xx * cellSize, yy * cellSize));
                 }
             }
         }
@@ -171,23 +173,19 @@ public class Game implements Observer {
     public void updateSuperPacGumEaten(SuperPacGum spg) {
         spg.destroy(); //La SuperPacGum est détruite quand Pacman la mange
         for (Ghost gh : ghosts) {
-            gh.superPacGumEaten(); //S'il existe une transition particulière quand une SuperPacGum est mangée, l'état des fantômes change
+            gh.superPacGumEaten();
         }
     }
 
-//    @Override
-//    public void updateGhostCollision(Ghost gh) {
-//        if (gh.getState() instanceof FrightenedMode) {
-//            gh.eaten(); //S'il existe une transition particulière quand le fantôme est mangé, son état change en conséquence
-//        }else if (!(gh.getState() instanceof EatenMode)) {
-//            System.out.println("Game over !\nScore : " + GameLauncher.getUIPanel().getScore()); //Quand Pacman rentre en contact avec un Fantôme qui n'est ni effrayé, ni mangé, c'est game over !
-//            System.exit(0); //TODO 다시 시작 표현
-//        }
-//    }
+    @Override
+    public void updateMonsterPacGumEaten(MonsterPacGum monsterPacGum) {
+        monsterPacGum.destroy();
+        Game.getPacman().switchMonsterMode();
+    }
 
     @Override
     public void updateGhostCollision(Ghost gh) {
-        if (gh.getState() instanceof FrightenedMode) {
+        if (gh.getState() instanceof FrightenedMode || pacman.isMonsterMode()) {
             gh.eaten();
         } else if (!(gh.getState() instanceof EatenMode)) {
             // 이미 게임 오버 처리 중이면 리턴
