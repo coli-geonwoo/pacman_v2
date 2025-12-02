@@ -84,32 +84,12 @@ public abstract class MovingEntity extends Entity {
         return sprite;
     }
 
-    public void setSprite(BufferedImage sprite) {
-        this.sprite = sprite;
-    }
-
-    public void setSprite(String spriteName) {
-        try {
-            this.sprite = ImageIO.read(getClass().getClassLoader().getResource("img/" + spriteName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public float getSubimage() {
         return subimage;
     }
 
-    public void setSubimage(float subimage) {
-        this.subimage = subimage;
-    }
-
     public int getNbSubimagesPerCycle() {
         return nbSubimagesPerCycle;
-    }
-
-    public void setNbSubimagesPerCycle(int nbSubimagesPerCycle) {
-        this.nbSubimagesPerCycle = nbSubimagesPerCycle;
     }
 
     public int getDirection() {

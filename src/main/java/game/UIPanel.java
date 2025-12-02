@@ -1,6 +1,7 @@
 package game;
 
 import game.entities.Cherry;
+import game.entities.GameLevel;
 import game.entities.MonsterPacGum;
 import game.entities.PacGum;
 import game.entities.SuperPacGum;
@@ -16,8 +17,10 @@ public class UIPanel extends JPanel implements Observer {
 
     private int score = 0;
     private int pacManLifes = 0;
+    private GameLevel gameLevel = GameLevel.LEVEL1;
     private JLabel scoreLabel;
     private JLabel lifeLabel;
+    private JLabel levelLabel;
 
     public UIPanel(int width, int height, int pacManLifes) {
         this.width = width;
@@ -25,19 +28,27 @@ public class UIPanel extends JPanel implements Observer {
         this.pacManLifes = pacManLifes;
         setPreferredSize(new Dimension(width, height));
         this.setBackground(Color.black);
-        scoreLabel = new JLabel("Score: " + score);
-        lifeLabel = new JLabel("Life: " + pacManLifes);
-        scoreLabel.setFont(scoreLabel.getFont().deriveFont(20.0F));
-        lifeLabel.setFont(scoreLabel.getFont().deriveFont(20.0F));
-        scoreLabel.setForeground(Color.white);
-        lifeLabel.setForeground(Color.white);
-        this.add(scoreLabel, BorderLayout.WEST);
-        this.add(lifeLabel, BorderLayout.WEST);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        scoreLabel = new JLabel("  Score: " + score);
+        levelLabel = new JLabel("  Level: " + gameLevel.name());
+        lifeLabel = new JLabel("  Life: " + pacManLifes);
+        setFontAndForeGround(levelLabel);
+        setFontAndForeGround(scoreLabel);
+        setFontAndForeGround(lifeLabel);
+    }
+
+    private void setFontAndForeGround(JLabel label) {
+        label.setFont(label.getFont().deriveFont(20.0F));
+        label.setForeground(Color.white);
+        this.add(label, BorderLayout.WEST);
     }
 
     public void updateScore(int incrScore) {
         this.score += incrScore;
         this.scoreLabel.setText("Score: " + score);
+        this.gameLevel = GameLevel.mapWithScore(score);
+        this.levelLabel.setText("Level: " + gameLevel.name());
     }
 
     public int getScore() {

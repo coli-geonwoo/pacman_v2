@@ -1,6 +1,8 @@
 package game.entities.ghosts;
 
 import game.Game;
+import game.GameLauncher;
+import game.entities.GameLevel;
 import game.entities.MovingEntity;
 import game.entities.Position;
 import game.ghostStates.GhostState;
@@ -69,8 +71,8 @@ public abstract class Ghost extends MovingEntity {
         //고스트가 chaseMode나 scatterMode에 있는 경우 타이머가 시작되고, 상태에 따라 5초 또는 20초 후에 해당 상태에 알림이 전송되어 적절한 전환이 적용됩니다.
         if (state.isSame(State.CHASE) || state.isSame(State.SCATTER)) {
             modeTimer++;
-
-            if ((isChasing && modeTimer >= (60 * 20)) || (!isChasing && modeTimer >= (60 * 5))) {
+            GameLevel gameLevel = GameLevel.mapWithScore(GameLauncher.getUIPanel().getScore());
+            if ((isChasing && modeTimer >= gameLevel.getChaseModeTime() || (!isChasing && modeTimer >= gameLevel.getScatterModeTime()))) {
                 state.timerModeOver(this);
                 isChasing = !isChasing;
             }
@@ -110,9 +112,5 @@ public abstract class Ghost extends MovingEntity {
 
     public Position getChaseTargetPosition() {
         return this.strategy.getChaseTargetPosition(this);
-    }
-
-    public GhostState getState() {
-        return state;
     }
 }
