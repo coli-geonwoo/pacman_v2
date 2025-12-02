@@ -60,4 +60,9 @@ public class UIPanel extends JPanel implements Observer {
             updateScore(500);
         }
     }
+
+    public void resetScore() {
+        score = 0;
+        repaint();
+    }
 }

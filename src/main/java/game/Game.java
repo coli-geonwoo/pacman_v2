@@ -26,11 +26,18 @@ public class Game implements Observer {
 
     private static Pacman pacman;
     private static Blinky blinky;
+    private static boolean isGameOver = false;
 
     private static boolean firstInput = false;
 
     public Game(){
         //게임 초기화
+        isGameOver = false;
+        firstInput = false;
+        resetGame();
+        objects = new ArrayList();
+        ghosts = new ArrayList();
+        walls = new ArrayList();
 
         //Chargement du fichier csv du niveau
         //레벨 csv 파일 로딩
@@ -168,14 +175,47 @@ public class Game implements Observer {
         }
     }
 
+//    @Override
+//    public void updateGhostCollision(Ghost gh) {
+//        if (gh.getState() instanceof FrightenedMode) {
+//            gh.eaten(); //S'il existe une transition particulière quand le fantôme est mangé, son état change en conséquence
+//        }else if (!(gh.getState() instanceof EatenMode)) {
+//            System.out.println("Game over !\nScore : " + GameLauncher.getUIPanel().getScore()); //Quand Pacman rentre en contact avec un Fantôme qui n'est ni effrayé, ni mangé, c'est game over !
+//            System.exit(0); //TODO 다시 시작 표현
+//        }
+//    }
+
     @Override
     public void updateGhostCollision(Ghost gh) {
         if (gh.getState() instanceof FrightenedMode) {
-            gh.eaten(); //S'il existe une transition particulière quand le fantôme est mangé, son état change en conséquence
-        }else if (!(gh.getState() instanceof EatenMode)) {
-            System.out.println("Game over !\nScore : " + GameLauncher.getUIPanel().getScore()); //Quand Pacman rentre en contact avec un Fantôme qui n'est ni effrayé, ni mangé, c'est game over !
-            System.exit(0); //TODO 다시 시작 표현
+            gh.eaten();
+        } else if (!(gh.getState() instanceof EatenMode)) {
+            // 이미 게임 오버 처리 중이면 리턴
+            if (Game.isGameOver) {
+                return;
+            }
+
+            Game.isGameOver = true;
+
+            final int finalScore = GameLauncher.getUIPanel().getScore();
+            System.out.println("Game over !\nScore : " + finalScore);
+
+            // 게임 오버 화면 표시 및 재시작 처리
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    GameLauncher.showGameOver(finalScore);
+                }
+            });
         }
+    }
+
+    public static void resetGame() {
+        walls.clear();
+        pacman = null;
+        blinky = null;
+        firstInput = false;
+        isGameOver = false;
     }
 
     public static void setFirstInput(boolean b) {

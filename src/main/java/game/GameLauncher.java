@@ -7,8 +7,14 @@ import java.io.IOException;
 public class GameLauncher {
     private static UIPanel uiPanel;
     private static String[] selectedGhosts;
+    private static JFrame window;
+    private static GameplayPanel gameplayPanel;
 
     public static void main(String[] args) {
+        startGame();
+    }
+
+    public static void startGame() {
         // 먼저 유령 선택 창 표시
         JFrame tempFrame = new JFrame();
         GhostSelectionDialog dialog = new GhostSelectionDialog(tempFrame);
@@ -24,7 +30,7 @@ public class GameLauncher {
         selectedGhosts = dialog.getSelectedGhosts();
         tempFrame.dispose();
 
-        JFrame window = new JFrame();
+        window = new JFrame();
         window.setTitle("Pacman");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -32,20 +38,47 @@ public class GameLauncher {
 
         //"플레이 영역" 생성
         try {
-            gameWindow.add(new GameplayPanel(448,496));
+            gameplayPanel = new GameplayPanel(448, 496);
+            gameWindow.add(gameplayPanel);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         //UI 생성(점수 표시용)
-        uiPanel = new UIPanel(256,496);
+        if (uiPanel == null) {
+            uiPanel = new UIPanel(256, 496);
+        } else {
+            uiPanel.resetScore();  // 기존 UI면 점수만 초기화
+        }
         gameWindow.add(uiPanel);
+//        uiPanel = new UIPanel(256,496);
+//        gameWindow.add(uiPanel);
 
         window.setContentPane(gameWindow);
         window.setResizable(false);
         window.pack();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+    }
+
+    public static void showGameOver(int score) {
+        // 게임 종료 화면 표시
+        GameOverScreen gameOverScreen = new GameOverScreen(window, score);
+        gameOverScreen.setVisible(true);
+
+        // 게임 정지
+        if (gameplayPanel != null) {
+            gameplayPanel.stopGame();
+        }
+
+        window.dispose();
+
+        if (gameOverScreen.isRestart()) {
+            startGame();
+        } else {
+            System.exit(0);
+        }
     }
 
     public static UIPanel getUIPanel() {
