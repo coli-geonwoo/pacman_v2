@@ -24,12 +24,23 @@ public class GhostSelectionDialog extends JDialog {
 
         // 유령 타입 옵션
         String[] ghostTypes = {"Blinky", "Pinky", "Inky", "Clyde"};
+        String[] ghostTypes2 = {"Blinky", "Pinky", "Clyde"};
 
         ghostComboBoxes = new JComboBox[4];
 
+        JLabel label = new JLabel("1번째 유령 (Ghost 1):");
+        label.setFont(new Font("Arial", Font.BOLD, 14));
+
+        ghostComboBoxes[0] = new JComboBox<>(ghostTypes2);
+        ghostComboBoxes[0].setFont(new Font("Arial", Font.PLAIN, 14));
+        ghostComboBoxes[0].setSelectedIndex(0);
+
+        mainPanel.add(label);
+        mainPanel.add(ghostComboBoxes[0]);
+
         // 각 유령 선택 콤보박스 생성
-        for (int i = 0; i < 4; i++) {
-            JLabel label = new JLabel((i + 1) + "번째 유령 (Ghost " + (i + 1) + "):");
+        for (int i = 1; i < 4; i++) {
+            label = new JLabel((i + 1) + "번째 유령 (Ghost " + (i + 1) + "):");
             label.setFont(new Font("Arial", Font.BOLD, 14));
 
             ghostComboBoxes[i] = new JComboBox<>(ghostTypes);
@@ -58,7 +69,6 @@ public class GhostSelectionDialog extends JDialog {
         mainPanel.add(livesLabel);
         mainPanel.add(livesSpinner);
 
-        // 버튼 패널
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
 

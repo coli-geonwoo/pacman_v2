@@ -46,9 +46,9 @@ public class UIPanel extends JPanel implements Observer {
 
     public void updateScore(int incrScore) {
         this.score += incrScore;
-        this.scoreLabel.setText("Score: " + score);
+        this.scoreLabel.setText("  Score: " + score);
         this.gameLevel = GameLevel.mapWithScore(score);
-        this.levelLabel.setText("Level: " + gameLevel.name());
+        this.levelLabel.setText("  Level: " + gameLevel.name());
     }
 
     public int getScore() {
@@ -77,7 +77,7 @@ public class UIPanel extends JPanel implements Observer {
             updateScore(500);
         }
         this.pacManLifes = Game.getPacman().getLife();
-        this.lifeLabel.setText("Life: " + this.pacManLifes);
+        this.lifeLabel.setText("  Life: " + this.pacManLifes);
     }
 
     @Override
