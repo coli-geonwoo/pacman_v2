@@ -7,11 +7,12 @@ import game.entities.ghosts.Ghost;
 import game.utils.Utils;
 
 //Stratégie concrète d'Inky (le fantôme bleu)
-public class InkyStrategy implements IGhostStrategy{
+public class InkyStrategy extends AbstractGhostStrategy {
 
     private Ghost otherGhost;
 
-    public InkyStrategy(Ghost ghost) {
+    public InkyStrategy(Ghost ghost, Position position) {
+        super(position);
         this.otherGhost = ghost;
     }
 
@@ -23,11 +24,5 @@ public class InkyStrategy implements IGhostStrategy{
         double directionOtherGhost = Utils.getDirection(otherGhost.getxPos(), otherGhost.getyPos(), pacmanFacingPosition.getX(), pacmanFacingPosition.getY());
         int[] blinkyVectorPosition = Utils.getPointDistanceDirection(pacmanFacingPosition.getX(), pacmanFacingPosition.getY(), distanceOtherGhost, directionOtherGhost);
         return new Position(blinkyVectorPosition[0], blinkyVectorPosition[1]);
-    }
-
-    @Override
-    //일시 정지 시 Inky는 오른쪽 하단 사각형을 타겟팅합니다.
-    public Position getScatterTargetPosition(Ghost ghost) {
-        return new Position(GameplayPanel.width, GameplayPanel.height);
     }
 }

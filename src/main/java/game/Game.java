@@ -21,7 +21,7 @@ public class Game implements Observer {
     //Pour lister les différentes entités présentes sur la fenêtre
     //창에 있는 다양한 엔터티를 나열하려면
     private List<Entity> objects = new ArrayList();
-    private List<Ghost> ghosts = new ArrayList();
+    private static List<Ghost> ghosts = new ArrayList();
     private static List<Wall> walls = new ArrayList();
 
     private static Pacman pacman;
@@ -47,6 +47,9 @@ public class Game implements Observer {
         CollisionDetector collisionDetector = new CollisionDetector(this);
         AbstractGhostFactory abstractGhostFactory = null;
 
+        String[] selectedGhosts = GameLauncher.getSelectedGhosts();
+        int ghostIndex = 0;
+
         //레벨에는 "격자"가 있으며 CSV 파일의 각 셀에 대해 현재 캐릭터에 따라 특정 엔터티가 격자의 셀에 표시됩니다.
         for(int xx = 0 ; xx < cellsPerRow ; xx++) {
             for(int yy = 0 ; yy < cellsPerColumn ; yy++) {
@@ -61,25 +64,27 @@ public class Game implements Observer {
                     //다양한 Pacman 관찰자들의 기록
                     pacman.registerObserver(GameLauncher.getUIPanel());
                     pacman.registerObserver(this);
-                }else if (dataChar.equals("b") || dataChar.equals("p") || dataChar.equals("i") || dataChar.equals("c")) { //Création des fantômes en utilisant les différentes factories
-                    switch (dataChar) {
-                        case "b":
+                }else if (dataChar.equals("g")) {
+                    String selectedGhost = selectedGhosts[ghostIndex];
+                    Position position = GhostPosition.values()[ghostIndex++].getPosition();
+                    switch (selectedGhost) {
+                        case "blinky":
                             abstractGhostFactory = new BlinkyFactory();
                             break;
-                        case "p":
+                        case "pinky":
                             abstractGhostFactory = new PinkyFactory();
                             break;
-                        case "i":
+                        case "inky":
                             abstractGhostFactory = new InkyFactory();
                             break;
-                        case "c":
+                        case "clyde":
                             abstractGhostFactory = new ClydeFactory();
                             break;
                     }
 
-                    Ghost ghost = abstractGhostFactory.makeGhost(xx * cellSize, yy * cellSize);
+                    Ghost ghost = abstractGhostFactory.makeGhost(xx * cellSize, yy * cellSize, position);
                     ghosts.add(ghost);
-                    if (dataChar.equals("b")) {
+                    if(ghost instanceof Blinky){
                         blinky = (Blinky) ghost;
                     }
                 }else if (dataChar.equals(".")) { //Création des PacGums
@@ -133,8 +138,11 @@ public class Game implements Observer {
     public static Pacman getPacman() {
         return pacman;
     }
-    public static Blinky getBlinky() {
-        return blinky;
+    public static Ghost getTargetGhost() {
+        if(blinky != null) {
+            return blinky;
+        }
+        return ghosts.get(0);
     }
 
     public static Position getPacmanPosition() {

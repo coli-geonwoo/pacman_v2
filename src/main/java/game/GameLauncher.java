@@ -6,8 +6,24 @@ import java.io.IOException;
 //애플리케이션 진입점
 public class GameLauncher {
     private static UIPanel uiPanel;
+    private static String[] selectedGhosts;
 
     public static void main(String[] args) {
+        // 먼저 유령 선택 창 표시
+        JFrame tempFrame = new JFrame();
+        GhostSelectionDialog dialog = new GhostSelectionDialog(tempFrame);
+        dialog.setVisible(true);
+
+        // 사용자가 취소하면 프로그램 종료
+        if (!dialog.isConfirmed()) {
+            System.exit(0);
+            return;
+        }
+
+        // 선택된 유령들 저장
+        selectedGhosts = dialog.getSelectedGhosts();
+        tempFrame.dispose();
+
         JFrame window = new JFrame();
         window.setTitle("Pacman");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,5 +50,9 @@ public class GameLauncher {
 
     public static UIPanel getUIPanel() {
         return uiPanel;
+    }
+
+    public static String[] getSelectedGhosts() {
+        return selectedGhosts;
     }
 }
