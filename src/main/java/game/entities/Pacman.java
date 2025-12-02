@@ -5,6 +5,10 @@ import game.Observer;
 import game.Sujet;
 import game.entities.direction.Speeds;
 import game.entities.notifier.EntityNotifyMapper;
+import game.entities.pacmanStates.GodMode;
+import game.entities.pacmanStates.MonsterMode;
+import game.entities.pacmanStates.NormalMode;
+import game.entities.pacmanStates.PacmanState;
 import game.utils.CollisionDetector;
 import game.utils.KeyHandler;
 import game.utils.WallCollisionDetector;
@@ -18,12 +22,9 @@ import javax.imageio.ImageIO;
 //팩맨을 설명하는 클래스
 public class Pacman extends MovingEntity implements Sujet {
 
-    private boolean isGodMode;
-    private int godModeTimer = 0;
-    private int life = 0;
+    private int life;
     private int frameCount = 0;
-    private int monsterModeTimer = 0;
-    private boolean isMonsterMode = false;
+    private PacmanState pacmanState;
     private CollisionDetector collisionDetector;
     private List<Observer> observerCollection;
     private EntityNotifyMapper entityNotifyMapper;
@@ -36,6 +37,7 @@ public class Pacman extends MovingEntity implements Sujet {
         observerCollection = new ArrayList<>();
         entityNotifyMapper = new EntityNotifyMapper();
         this.life = life;
+        this.pacmanState = new NormalMode();
         try {
             this.monsterModeSprite = ImageIO.read(getClass().getClassLoader().getResource("img/monster_pacman.png"));
         } catch (IOException e) {
@@ -83,20 +85,9 @@ public class Pacman extends MovingEntity implements Sujet {
 
     @Override
     public void update() {
-        if(isMonsterMode) {
-            monsterModeTimer++;
-            if(monsterModeTimer >= 10*60) {
-                isMonsterMode = false;
-            }
+        if(!pacmanState.isNormalMode()) {
+            pacmanState = pacmanState.update();
         }
-
-        if(isGodMode) {
-            godModeTimer++;
-            if(godModeTimer >= 5 * 60) {
-                isGodMode = false;
-            }
-        }
-
         frameCount++;
 
         //모든 충돌 객체 가져오기 > 객체들에게 알림 발송
@@ -109,28 +100,9 @@ public class Pacman extends MovingEntity implements Sujet {
         }
     }
 
-
-    //monsterMode일 때와 다르게
     @Override
     public void render(Graphics2D g) {
-        if (isMonsterMode && frameCount % 10 < 5) {
-            g.drawImage(monsterModeSprite.getSubimage((int) subimage * size + direction * size * nbSubimagesPerCycle, 0,
-                            size, size),
-                    getxPos(), getyPos(), null);
-            return;
-        }
-
-        if(isGodMode) {
-            if(frameCount % 10 < 5) {
-                g.drawImage(sprite.getSubimage((int) subimage * size + direction * size * nbSubimagesPerCycle, 0, size,
-                                size),
-                        getxPos(), getyPos(), null);
-            }
-            return;
-        }
-
-        g.drawImage(sprite.getSubimage((int) subimage * size + direction * size * nbSubimagesPerCycle, 0, size, size),
-                getxPos(), getyPos(), null);
+        pacmanState.render(this, g);
     }
 
     public void decreaseLife() {
@@ -146,29 +118,27 @@ public class Pacman extends MovingEntity implements Sujet {
     }
 
     public boolean isMonsterMode() {
-        return isMonsterMode;
+        return pacmanState.isMonsterMode();
     }
 
     public boolean isGodMode() {
-        return isGodMode;
+        return pacmanState.isGodMode();
     }
 
-    public void switchMonsterMode() {
-        if (isMonsterMode) {
-            monsterModeTimer = 0;
-            return;
-        }
-        isMonsterMode = true;
-        monsterModeTimer = 0;
+    public void switchMode(PacmanState pacmanState) {
+        this.pacmanState = pacmanState;
     }
 
-    public void switchGameMode() {
-        if (isGodMode) {
-            godModeTimer = 0;
-            return;
-        }
-        isGodMode = true;
-        godModeTimer = 0;
+    public BufferedImage getMonsterModeSprite() {
+        return monsterModeSprite;
+    }
+
+    public int getImageXPos() {
+        return (int) subimage * size + direction * size * nbSubimagesPerCycle;
+    }
+
+    public int getFrameCount() {
+        return frameCount;
     }
 
     public void setCollisionDetector(CollisionDetector collisionDetector) {

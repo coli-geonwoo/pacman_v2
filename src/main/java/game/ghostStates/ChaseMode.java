@@ -6,7 +6,7 @@ import game.entities.Position;
 import game.entities.ghosts.Ghost;
 
 //팩맨을 쫓는 유령의 구체적인 상태를 설명하는 클래스
-public class ChaseMode extends GhostState{
+public class ChaseMode extends GhostState {
 
     public ChaseMode() {
         super();

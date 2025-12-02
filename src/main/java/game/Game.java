@@ -1,12 +1,14 @@
 package game;
 
+import static javax.swing.SwingUtilities.*;
+
 import game.entities.*;
 import game.entities.ghosts.Blinky;
 import game.entities.ghosts.Ghost;
+import game.entities.pacmanStates.GodMode;
+import game.entities.pacmanStates.MonsterMode;
 import game.ghostFactory.*;
 import game.ghostStates.EatenMode;
-import game.ghostStates.FrightenedMode;
-import game.ghostStates.GhostState;
 import game.ghostStates.State;
 import game.utils.CollisionDetector;
 import game.utils.CsvReader;
@@ -16,6 +18,7 @@ import java.awt.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.SwingUtilities;
 
 //Classe gérant le jeu en lui même
 //게임 자체를 관리하는 클래스
@@ -184,7 +187,7 @@ public class Game implements Observer {
     @Override
     public void updateMonsterPacGumEaten(MonsterPacGum monsterPacGum) {
         monsterPacGum.destroy();
-        Game.getPacman().switchMonsterMode();
+        Game.getPacman().switchMode(new MonsterMode());
     }
 
     @Override
@@ -195,11 +198,11 @@ public class Game implements Observer {
 
         if (gh.isState(State.FRIGHTENED) || pacman.isMonsterMode()) {
             gh.eaten();
-        } else if (!(gh.getState() instanceof EatenMode)) {
+        } else if (!gh.isState(State.EATEN)) {
             //마지막 생명이 아니면 > 생명 깎고 갓모드 전환
             if(!pacman.isLastLife()) {
                 pacman.decreaseLife();
-                pacman.switchGameMode();
+                pacman.switchMode(new GodMode());
                 return;
             }
 
@@ -210,16 +213,8 @@ public class Game implements Observer {
 
             Game.isGameOver = true;
 
-            final int finalScore = GameLauncher.getUIPanel().getScore();
-            System.out.println("Game over !\nScore : " + finalScore);
-
             // 게임 오버 화면 표시 및 재시작 처리
-            javax.swing.SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    GameLauncher.showGameOver(finalScore);
-                }
-            });
+            invokeLater(() -> GameLauncher.showGameOver(GameLauncher.getUIPanel().getScore()));
         }
     }
 

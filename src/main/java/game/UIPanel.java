@@ -62,12 +62,11 @@ public class UIPanel extends JPanel implements Observer {
 
     @Override
     public void updateGhostCollision(Ghost gh) {
-        if (gh.isState(State.FRIGHTENED)) {
+        if (!Game.getPacman().isGodMode() && gh.isState(State.FRIGHTENED)) {
             updateScore(500);
         }
         this.pacManLifes = Game.getPacman().getLife();
         this.lifeLabel.setText("Life: " + this.pacManLifes);
-
     }
 
     @Override
