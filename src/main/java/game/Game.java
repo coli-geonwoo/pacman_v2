@@ -1,33 +1,44 @@
 package game;
 
-import static javax.swing.SwingUtilities.*;
+import static javax.swing.SwingUtilities.invokeLater;
 
-import game.entities.*;
+import game.entities.Cherry;
+import game.entities.Entity;
+import game.entities.GhostHouse;
+import game.entities.GhostPosition;
+import game.entities.MonsterPacGum;
+import game.entities.PacGum;
+import game.entities.Pacman;
+import game.entities.Position;
+import game.entities.SuperPacGum;
+import game.entities.Wall;
 import game.entities.ghosts.Blinky;
 import game.entities.ghosts.Ghost;
 import game.entities.pacmanStates.GodMode;
 import game.entities.pacmanStates.MonsterMode;
-import game.ghostFactory.*;
-import game.ghostStates.EatenMode;
+import game.ghostFactory.AbstractGhostFactory;
+import game.ghostFactory.BlinkyFactory;
+import game.ghostFactory.ClydeFactory;
+import game.ghostFactory.InkyFactory;
+import game.ghostFactory.PinkyFactory;
 import game.ghostStates.State;
 import game.utils.CollisionDetector;
 import game.utils.CsvReader;
 import game.utils.KeyHandler;
-
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.SwingUtilities;
 
 //Classe gérant le jeu en lui même
 //게임 자체를 관리하는 클래스
 public class Game implements Observer {
-    //Pour lister les différentes entités présentes sur la fenêtre
     //창에 있는 다양한 엔터티를 나열하려면
     private List<Entity> objects = new ArrayList();
     private static List<Ghost> ghosts = new ArrayList();
     private static List<Wall> walls = new ArrayList();
+    private static int objectCnt = 0;
+    private static int crashCnt = 0;
 
     private static Pacman pacman;
     private static Blinky blinky;
@@ -60,24 +71,25 @@ public class Game implements Observer {
         AbstractGhostFactory abstractGhostFactory = null;
 
         String[] selectedGhosts = GameLauncher.getSelectedGhosts();
-        int lives  = GameLauncher.getLives();
+        int lives = GameLauncher.getLives();
+
 
         int ghostIndex = 0;
 
         //레벨에는 "격자"가 있으며 CSV 파일의 각 셀에 대해 현재 캐릭터에 따라 특정 엔터티가 격자의 셀에 표시됩니다.
-        for(int xx = 0 ; xx < cellsPerRow ; xx++) {
-            for(int yy = 0 ; yy < cellsPerColumn ; yy++) {
+        for (int xx = 0; xx < cellsPerRow; xx++) {
+            for (int yy = 0; yy < cellsPerColumn; yy++) {
                 String dataChar = data.get(yy).get(xx);
                 if (dataChar.equals("x")) { //Création des murs //벽의 생성
                     objects.add(new Wall(xx * cellSize, yy * cellSize));
-                }else if (dataChar.equals("P")) { //Création de Pacman
+                } else if (dataChar.equals("P")) { //Création de Pacman
                     pacman = new Pacman(xx * cellSize, yy * cellSize, lives);
                     pacman.setCollisionDetector(collisionDetector);
 
                     //다양한 Pacman 관찰자들의 기록
                     pacman.registerObserver(GameLauncher.getUIPanel());
                     pacman.registerObserver(this);
-                }else if (dataChar.equals("g")) {
+                } else if (dataChar.equals("g")) {
                     String selectedGhost = selectedGhosts[ghostIndex];
                     Position position = GhostPosition.values()[ghostIndex++].getPosition();
                     System.out.println(position.getX() + " " + position.getY());
@@ -98,18 +110,20 @@ public class Game implements Observer {
 
                     Ghost ghost = abstractGhostFactory.makeGhost(xx * cellSize, yy * cellSize, position);
                     ghosts.add(ghost);
-                    if(ghost instanceof Blinky){
+                    if (ghost instanceof Blinky) {
                         blinky = (Blinky) ghost;
                     }
-                }else if (dataChar.equals(".")) { //Création des PacGums
+                } else if (dataChar.equals(".")) { //Création des PacGums
                     objects.add(new PacGum(xx * cellSize, yy * cellSize));
-                }else if (dataChar.equals("o")) { //Création des SuperPacGums
+                    objectCnt++;
+                } else if (dataChar.equals("o")) { //Création des SuperPacGums
                     objects.add(new SuperPacGum(xx * cellSize, yy * cellSize));
-                }else if (dataChar.equals("-")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
+                } else if (dataChar.equals("-")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
                     objects.add(new GhostHouse(xx * cellSize, yy * cellSize));
-                }else if (dataChar.equals("h")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
+                } else if (dataChar.equals("h")) {
+                    objectCnt++;
                     objects.add(new Cherry(xx * cellSize, yy * cellSize));
-                }else if (dataChar.equals("m")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
+                } else if (dataChar.equals("m")) { //Création des murs de la maison des fantômes //유령집 벽 만들기
                     objects.add(new MonsterPacGum(xx * cellSize, yy * cellSize));
                 }
             }
@@ -132,10 +146,20 @@ public class Game implements Observer {
         return objects;
     }
 
+    public static void increaseCrash() {
+        crashCnt++;
+        if(crashCnt == objectCnt) {
+            Game.isGameOver = true;
+            invokeLater(() -> GameLauncher.showGameOver(GameLauncher.getUIPanel().getScore()));
+        }
+    }
+
     //모든 엔터티 업데이트
     public void update() {
-        for (Entity o: objects) {
-            if (!o.isDestroyed()) o.update();
+        for (Entity o : objects) {
+            if (!o.isDestroyed()) {
+                o.update();
+            }
         }
     }
 
@@ -146,16 +170,19 @@ public class Game implements Observer {
 
     //모든 엔터티의 렌더링
     public void render(Graphics2D g) {
-        for (Entity o: objects) {
-            if (!o.isDestroyed()) o.render(g);
+        for (Entity o : objects) {
+            if (!o.isDestroyed()) {
+                o.render(g);
+            }
         }
     }
 
     public static Pacman getPacman() {
         return pacman;
     }
+
     public static Ghost getTargetGhost() {
-        if(blinky != null) {
+        if (blinky != null) {
             return blinky;
         }
         return ghosts.get(0);
@@ -192,7 +219,7 @@ public class Game implements Observer {
 
     @Override
     public void updateGhostCollision(Ghost gh) {
-        if(pacman.isGodMode()) {
+        if (pacman.isGodMode()) {
             return;
         }
 
@@ -200,7 +227,7 @@ public class Game implements Observer {
             gh.eaten();
         } else if (!gh.isState(State.EATEN)) {
             //마지막 생명이 아니면 > 생명 깎고 갓모드 전환
-            if(!pacman.isLastLife()) {
+            if (!pacman.isLastLife()) {
                 pacman.decreaseLife();
                 pacman.switchMode(new GodMode());
                 return;
@@ -224,6 +251,8 @@ public class Game implements Observer {
         blinky = null;
         firstInput = false;
         isGameOver = false;
+        crashCnt = 0;
+        objectCnt = 0;
     }
 
     public static void setFirstInput(boolean b) {

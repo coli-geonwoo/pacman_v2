@@ -85,8 +85,13 @@ public class UIPanel extends JPanel implements Observer {
 
     }
 
-    public void resetScore() {
+    public void resetPanel(int lives) {
+        System.out.println("초기화 값 : " + lives);
         score = 0;
+        pacManLifes = lives;
+        lifeLabel.setText("  Life: " + pacManLifes);
+        levelLabel.setText("  Level: " + gameLevel.name());
+        scoreLabel.setText("  Score: " + score);
         repaint();
     }
 }

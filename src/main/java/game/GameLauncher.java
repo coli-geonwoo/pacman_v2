@@ -48,10 +48,11 @@ public class GameLauncher {
         }
 
         //UI 생성(점수 표시용)
+
         if (uiPanel == null) {
             uiPanel = new UIPanel(256, 496, lives);
         } else {
-            uiPanel.resetScore();  // 기존 UI면 점수만 초기화
+            uiPanel.resetPanel(lives);
         }
         gameWindow.add(uiPanel);
 

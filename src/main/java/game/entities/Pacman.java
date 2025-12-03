@@ -5,8 +5,6 @@ import game.Observer;
 import game.Sujet;
 import game.entities.direction.Speeds;
 import game.entities.notifier.EntityNotifyMapper;
-import game.entities.pacmanStates.GodMode;
-import game.entities.pacmanStates.MonsterMode;
 import game.entities.pacmanStates.NormalMode;
 import game.entities.pacmanStates.PacmanState;
 import game.utils.CollisionDetector;
@@ -85,7 +83,7 @@ public class Pacman extends MovingEntity implements Sujet {
 
     @Override
     public void update() {
-        if(!pacmanState.isNormalMode()) {
+        if (!pacmanState.isNormalMode()) {
             pacmanState = pacmanState.update();
         }
         frameCount++;
