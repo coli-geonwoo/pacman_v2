@@ -6,6 +6,15 @@ import game.entities.ghosts.Inky;
 
 //Factory concrète pour créer des fantômes Inky
 public class InkyFactory extends AbstractGhostFactory {
+
+    private static final InkyFactory SINGLETON_INSTANCE = new InkyFactory();
+
+    public static InkyFactory getInstance() {
+        return SINGLETON_INSTANCE;
+    }
+
+    private InkyFactory() {}
+
     @Override
     public Ghost makeGhost(int xPos, int yPos, Position position) {
         return new Inky(xPos, yPos, position);

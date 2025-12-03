@@ -92,23 +92,7 @@ public class Game implements Observer {
                 } else if (dataChar.equals("g")) {
                     String selectedGhost = selectedGhosts[ghostIndex];
                     Position position = GhostPosition.values()[ghostIndex++].getPosition();
-                    System.out.println(position.getX() + " " + position.getY());
-                    switch (selectedGhost) {
-                        case "blinky":
-                            abstractGhostFactory = new BlinkyFactory();
-                            break;
-                        case "pinky":
-                            abstractGhostFactory = new PinkyFactory();
-                            break;
-                        case "inky":
-                            abstractGhostFactory = new InkyFactory();
-                            break;
-                        case "clyde":
-                            abstractGhostFactory = new ClydeFactory();
-                            break;
-                    }
-
-                    Ghost ghost = abstractGhostFactory.makeGhost(xx * cellSize, yy * cellSize, position);
+                    Ghost ghost = AbstractGhostFactory.makeByUserInputs(selectedGhost, xx * cellSize, yy * cellSize, position);
                     ghosts.add(ghost);
                     if (ghost instanceof Blinky) {
                         blinky = (Blinky) ghost;

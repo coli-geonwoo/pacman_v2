@@ -7,5 +7,29 @@ import game.entities.ghosts.*;
 public abstract class AbstractGhostFactory {
 
     public abstract Ghost makeGhost(int xPos, int yPos, Position position);
+
+    public static Ghost makeByUserInputs(String input, int xPos, int yPos, Position position) {
+        if(input.equals("blinky")) {
+            return BlinkyFactory.getInstance()
+                    .makeGhost(xPos, yPos, position);
+        }
+
+        if(input.equals("inky")) {
+            return InkyFactory.getInstance()
+                    .makeGhost(xPos, yPos, position);
+        }
+
+        if(input.equals("clyde")) {
+            return ClydeFactory.getInstance()
+                    .makeGhost(xPos, yPos, position);
+        }
+
+        if(input.equals("pinky")) {
+            return PinkyFactory.getInstance()
+                    .makeGhost(xPos, yPos, position);
+        }
+
+        throw new RuntimeException("해당하는 유령 타입 생성 팩토리 객체가 없습니다.");
+    }
 }
 

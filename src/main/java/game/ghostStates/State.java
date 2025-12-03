@@ -1,7 +1,5 @@
 package game.ghostStates;
 
-import game.entities.ghosts.Ghost;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public enum State {
