@@ -17,10 +17,6 @@ import game.entities.ghosts.Ghost;
 import game.entities.pacmanStates.GodMode;
 import game.entities.pacmanStates.MonsterMode;
 import game.ghostFactory.AbstractGhostFactory;
-import game.ghostFactory.BlinkyFactory;
-import game.ghostFactory.ClydeFactory;
-import game.ghostFactory.InkyFactory;
-import game.ghostFactory.PinkyFactory;
 import game.ghostStates.State;
 import game.utils.CollisionDetector;
 import game.utils.CsvReader;
@@ -30,13 +26,11 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-//Classe gérant le jeu en lui même
 //게임 자체를 관리하는 클래스
 public class Game implements Observer {
-    //창에 있는 다양한 엔터티를 나열하려면
-    private List<Entity> objects = new ArrayList();
-    private static List<Ghost> ghosts = new ArrayList();
-    private static List<Wall> walls = new ArrayList();
+    private static List<Entity> objects;
+    private static List<Ghost> ghosts;
+    private static List<Wall> walls;
     private static int objectCnt = 0;
     private static int crashCnt = 0;
 
@@ -48,14 +42,8 @@ public class Game implements Observer {
 
     public Game() {
         //게임 초기화
-        isGameOver = false;
-        firstInput = false;
         resetGame();
-        objects = new ArrayList();
-        ghosts = new ArrayList();
-        walls = new ArrayList();
 
-        //Chargement du fichier csv du niveau
         //레벨 csv 파일 로딩
         List<List<String>> data = null;
         try {
@@ -68,11 +56,9 @@ public class Game implements Observer {
         int cellSize = 8;
 
         CollisionDetector collisionDetector = new CollisionDetector(this);
-        AbstractGhostFactory abstractGhostFactory = null;
 
         String[] selectedGhosts = GameLauncher.getSelectedGhosts();
         int lives = GameLauncher.getLives();
-
 
         int ghostIndex = 0;
 
@@ -92,7 +78,8 @@ public class Game implements Observer {
                 } else if (dataChar.equals("g")) {
                     String selectedGhost = selectedGhosts[ghostIndex];
                     Position position = GhostPosition.values()[ghostIndex++].getPosition();
-                    Ghost ghost = AbstractGhostFactory.makeByUserInputs(selectedGhost, xx * cellSize, yy * cellSize, position);
+                    Ghost ghost = AbstractGhostFactory.makeByUserInputs(selectedGhost, xx * cellSize, yy * cellSize,
+                            position);
                     ghosts.add(ghost);
                     if (ghost instanceof Blinky) {
                         blinky = (Blinky) ghost;
@@ -132,7 +119,7 @@ public class Game implements Observer {
 
     public static void increaseCrash() {
         crashCnt++;
-        if(crashCnt == objectCnt) {
+        if (crashCnt == objectCnt) {
             Game.isGameOver = true;
             invokeLater(() -> GameLauncher.showGameOver(GameLauncher.getUIPanel().getScore()));
         }
@@ -229,12 +216,14 @@ public class Game implements Observer {
         }
     }
 
-    public static void resetGame() {
-        walls.clear();
+    private static void resetGame() {
+        isGameOver = false;
+        firstInput = false;
+        objects = new ArrayList();
+        ghosts = new ArrayList();
+        walls = new ArrayList();
         pacman = null;
         blinky = null;
-        firstInput = false;
-        isGameOver = false;
         crashCnt = 0;
         objectCnt = 0;
     }

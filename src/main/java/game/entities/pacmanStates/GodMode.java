@@ -14,14 +14,14 @@ public class GodMode implements PacmanState {
         this.godModeTimer = 0;
     }
 
-
     @Override
     public void render(Pacman pacman, Graphics2D graphics) {
         int frameCount = pacman.getFrameCount();
         int size = pacman.getSize();
         BufferedImage normalSprite = pacman.getSprite();
         if(frameCount % 10 < 5) {
-            graphics.drawImage(normalSprite.getSubimage(pacman.getImageXPos(), 0, size, size), pacman.getxPos(), pacman.getyPos(), null);
+            graphics.drawImage(normalSprite.getSubimage(pacman.getImageXPos(), 0, size, size),
+                    pacman.getxPos(), pacman.getyPos(), null);
         }
     }
 

@@ -8,6 +8,7 @@ public class GameLauncher {
     private static UIPanel uiPanel;
     private static String[] selectedGhosts;
     private static int lives;
+    private static boolean isBeginnerMode;
     private static JFrame window;
     private static GameplayPanel gameplayPanel;
 
@@ -30,6 +31,7 @@ public class GameLauncher {
         // 선택된 유령들 저장
         selectedGhosts = dialog.getSelectedGhosts();
         lives = dialog.getLives();
+        isBeginnerMode = dialog.isBeginnerMode();
         tempFrame.dispose();
 
         window = new JFrame();
@@ -65,7 +67,8 @@ public class GameLauncher {
 
     public static void showGameOver(int score) {
         // 게임 종료 화면 표시
-        GameOverScreen gameOverScreen = new GameOverScreen(window, score);
+        int finalScore = score + Game.getPacman().getLife() * 200;
+        GameOverScreen gameOverScreen = new GameOverScreen(window, finalScore);
         gameOverScreen.setVisible(true);
 
         // 게임 정지
@@ -84,6 +87,10 @@ public class GameLauncher {
 
     public static UIPanel getUIPanel() {
         return uiPanel;
+    }
+
+    public static boolean isBeginnerMode() {
+        return isBeginnerMode;
     }
 
     public static String[] getSelectedGhosts() {

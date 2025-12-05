@@ -1,11 +1,10 @@
 package game.entities;
 
 import game.GameLauncher;
-import game.GameplayPanel;
-import game.UIPanel;
 
 public enum GameLevel {
 
+    BEGINNER(-1, 0, Integer.MAX_VALUE),
     LEVEL1(1000, 20 * 60, 5 * 60),
     LEVEL2(2000, 30 * 60, 3 * 60),
     LEVEL3(3000, 40 * 60, 1 * 60),
@@ -23,9 +22,13 @@ public enum GameLevel {
     }
 
     public static GameLevel mapWithScore(int gameScore) {
+        if (GameLauncher.isBeginnerMode()) {
+            return BEGINNER;
+        }
+
         GameLevel[] values = values();
         for (GameLevel level : values) {
-            if(level.score >= gameScore) {
+            if (level.score >= gameScore) {
                 return level;
             }
         }
