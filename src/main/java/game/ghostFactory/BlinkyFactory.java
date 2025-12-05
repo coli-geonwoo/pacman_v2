@@ -16,7 +16,7 @@ public class BlinkyFactory extends AbstractGhostFactory {
     private BlinkyFactory() {}
 
     @Override
-    public Ghost makeGhost(int xPos, int yPos, Position position) {
+    public Ghost makeGhost(int xPos, int yPos, Position position, Ghost target) {
         return new Blinky(xPos, yPos, position);
     }
 }

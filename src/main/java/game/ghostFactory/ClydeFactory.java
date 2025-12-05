@@ -15,7 +15,7 @@ public class ClydeFactory extends AbstractGhostFactory {
     private ClydeFactory() {}
 
     @Override
-    public Ghost makeGhost(int xPos, int yPos, Position position) {
+    public Ghost makeGhost(int xPos, int yPos, Position position, Ghost target) {
         return new Clyde(xPos, yPos, position);
     }
 }

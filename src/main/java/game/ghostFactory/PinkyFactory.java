@@ -16,7 +16,7 @@ public class PinkyFactory extends AbstractGhostFactory {
     private PinkyFactory() {}
 
     @Override
-    public Ghost makeGhost(int xPos, int yPos, Position pos) {
+    public Ghost makeGhost(int xPos, int yPos, Position pos, Ghost target) {
         return new Pinky(xPos, yPos, pos);
     }
 }

@@ -16,7 +16,7 @@ public class InkyFactory extends AbstractGhostFactory {
     private InkyFactory() {}
 
     @Override
-    public Ghost makeGhost(int xPos, int yPos, Position position) {
-        return new Inky(xPos, yPos, position);
+    public Ghost makeGhost(int xPos, int yPos, Position position, Ghost target) {
+        return new Inky(xPos, yPos, position, target);
     }
 }

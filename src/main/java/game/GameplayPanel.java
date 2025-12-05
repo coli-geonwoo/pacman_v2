@@ -2,6 +2,7 @@ package game;
 
 import game.utils.KeyHandler;
 
+import game.utils.reader.CsvReaderAdapter;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +58,7 @@ public class GameplayPanel extends JPanel implements Runnable {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
         key = new KeyHandler(this);
-        game = new Game();
+        game = new Game(new CsvReaderAdapter());
     }
 
     public void update() {
