@@ -17,13 +17,13 @@ public class InkyStrategy extends AbstractGhostStrategy {
 
     @Override
     public Position getChaseTargetPosition(Ghost ghost) {
-        Position pacmanFacingPosition = Utils.getPointDistanceDirection2(Game.getPacman().getxPos(),
+        Position pacmanFacingPosition = Utils.getPointDistanceDirection(Game.getPacman().getxPos(),
                 Game.getPacman().getyPos(), 32d, Utils.directionConverter(Game.getPacman().getDirection()));
         double distanceOtherGhost = Utils.getDistance(pacmanFacingPosition.getX(), pacmanFacingPosition.getY(),
                 otherGhost.getxPos(), otherGhost.getyPos());
         double directionOtherGhost = Utils.getDirection(otherGhost.getxPos(), otherGhost.getyPos(),
                 pacmanFacingPosition.getX(), pacmanFacingPosition.getY());
-        Position blinkyVectorPosition = Utils.getPointDistanceDirection2(pacmanFacingPosition.getX(),
+        Position blinkyVectorPosition = Utils.getPointDistanceDirection(pacmanFacingPosition.getX(),
                 pacmanFacingPosition.getY(), distanceOtherGhost, directionOtherGhost);
         return new Position(blinkyVectorPosition.getX(), blinkyVectorPosition.getY());
     }

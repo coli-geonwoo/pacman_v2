@@ -28,7 +28,7 @@ public class Utils {
     }
 
     //첫 번째 지점, 각도, 거리에서 지점을 가져오는 함수
-    public static Position getPointDistanceDirection2(int x, int y, double distance, double direction) {
+    public static Position getPointDistanceDirection(int x, int y, double distance, double direction) {
         return new Position(
         x + (int)(Math.cos(direction) * distance),
         y + (int)(Math.sin(direction) * distance)
