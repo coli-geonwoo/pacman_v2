@@ -24,18 +24,18 @@ public class ChaseMode extends GhostState {
         ghost.switchMode(State.SCATTER);
     }
 
-    //이 상태에서는 목표 위치가 유령의 전략에 따라 달라집니다.
-    @Override
-    public Position getTargetPosition(Ghost ghost) {
-        return ghost.getChaseTargetPosition();
-    }
-
     @Override
     public void eaten(Ghost ghost) {
         Pacman pacman = Game.getPacman();
         if(pacman.isMonsterMode()) {
             ghost.switchMode(State.EATEN);
         }
+    }
+
+    //이 상태에서는 목표 위치가 유령의 전략에 따라 달라집니다.
+    @Override
+    public Position getTargetPosition(Ghost ghost) {
+        return ghost.getChaseTargetPosition();
     }
 
     @Override

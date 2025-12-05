@@ -10,11 +10,15 @@ public class HouseMode extends GhostState {
         super();
     }
 
-    //Transition lorsque le fantôme est hors de sa maison
     //유령이 집 밖에 있을 때의 전환
     @Override
     public void outsideHouse(Ghost ghost) {
         ghost.switchChaseModeOrScatterMode();
+    }
+
+    @Override
+    public boolean ignoreGhostHouses() {
+        return true;
     }
 
     //이 상태에서는 목표 위치는 유령의 집 바로 위의 사각형입니다.
@@ -26,10 +30,5 @@ public class HouseMode extends GhostState {
     @Override
     public State getState() {
         return State.HOUSE;
-    }
-
-    @Override
-    public boolean ignoreGhostHouses() {
-        return true;
     }
 }

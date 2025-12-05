@@ -24,12 +24,6 @@ public class ScatterMode extends GhostState{
         ghost.switchMode(State.CHASE);
     }
 
-    //이 상태에서는 목표 위치는 유령의 전략에 따라 달라집니다.
-    @Override
-    public Position getTargetPosition(Ghost ghost) {
-        return ghost.getScatterTargetPosition();
-    }
-
     @Override
     public void eaten(Ghost ghost) {
         Pacman pacman = Game.getPacman();
@@ -41,5 +35,11 @@ public class ScatterMode extends GhostState{
     @Override
     public State getState() {
         return State.SCATTER;
+    }
+
+    //이 상태에서는 목표 위치는 유령의 전략에 따라 달라집니다.
+    @Override
+    public Position getTargetPosition(Ghost ghost) {
+        return ghost.getScatterTargetPosition();
     }
 }

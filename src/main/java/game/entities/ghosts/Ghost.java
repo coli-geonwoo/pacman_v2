@@ -35,6 +35,9 @@ public abstract class Ghost extends MovingEntity {
 
     //다른 상태 간 전환을 위한 방법
     public void switchMode(State targetState) {
+        if(targetState == State.CHASE) {
+            isChasing = true;
+        }
         state = State.mapToGhostState(targetState);
     }
 

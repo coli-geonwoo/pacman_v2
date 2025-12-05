@@ -2,15 +2,13 @@ package game.ghostStates;
 
 import game.entities.Position;
 import game.entities.ghosts.Ghost;
-import game.utils.Utils;
-import game.utils.WallCollisionDetector;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
 //팩맨에게 먹힌 유령의 구체적인 상태를 설명하는 클래스
-public class EatenMode extends GhostState{
+public class EatenMode extends GhostState {
 
     private static final BufferedImage EATEN_SPRITE;
 
@@ -46,7 +44,7 @@ public class EatenMode extends GhostState{
         int xPos = ghost.getxPos();
         int yPos = ghost.getyPos();
         int direction = ghost.getDirection();
-        g.drawImage(EATEN_SPRITE.getSubimage(direction * size, 0, size, size), xPos, yPos,null);
+        g.drawImage(EATEN_SPRITE.getSubimage(direction * size, 0, size, size), xPos, yPos, null);
     }
 
     @Override
