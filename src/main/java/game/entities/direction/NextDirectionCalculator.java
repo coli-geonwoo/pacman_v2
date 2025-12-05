@@ -11,13 +11,8 @@ public class NextDirectionCalculator {
 
     private final List<DirectionCalculateStrategy> directionCalculateStrategies;
 
-    public NextDirectionCalculator() {
-        this.directionCalculateStrategies = List.of(
-                new UpCalculateStrategy(),
-                new DownCalculateStrategy(),
-                new LeftCalculateStrategy(),
-                new RightCalculateStrategy()
-        );
+    public NextDirectionCalculator(List<DirectionCalculateStrategy> directionCalculateStrategies) {
+        this.directionCalculateStrategies = directionCalculateStrategies;
     }
 
     public CalculateResult calculateNextDirection(Ghost ghost, Position position, boolean ignoreGhostHouses) {

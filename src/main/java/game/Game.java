@@ -185,7 +185,7 @@ public class Game implements Observer {
     @Override
     public void updateMonsterPacGumEaten(MonsterPacGum monsterPacGum) {
         monsterPacGum.destroy();
-        Game.getPacman().switchMode(new MonsterMode());
+        Game.getPacman().switchMode(new MonsterMode(0));
     }
 
     @Override
@@ -200,7 +200,7 @@ public class Game implements Observer {
             //마지막 생명이 아니면 > 생명 깎고 갓모드 전환
             if (!pacman.isLastLife()) {
                 pacman.decreaseLife();
-                pacman.switchMode(new GodMode());
+                pacman.switchMode(new GodMode(0));
                 return;
             }
 

@@ -10,8 +10,8 @@ public class MonsterMode implements PacmanState {
 
     private int monsterModeTimer;
 
-    public MonsterMode() {
-        this.monsterModeTimer = 0;
+    public MonsterMode(int monsterModeTimer) {
+        this.monsterModeTimer = monsterModeTimer;
     }
 
     @Override

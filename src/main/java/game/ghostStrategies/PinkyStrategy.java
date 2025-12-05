@@ -14,6 +14,7 @@ public class PinkyStrategy extends AbstractGhostStrategy {
 
     @Override
     public Position getChaseTargetPosition(Ghost ghost) {
-        return Utils.getPointDistanceDirection2(Game.getPacman().getxPos(), Game.getPacman().getyPos(), 64, Utils.directionConverter(Game.getPacman().getDirection()));
+        return Utils.getPointDistanceDirection2(Game.getPacman().getxPos(), Game.getPacman().getyPos(), 64,
+                Utils.directionConverter(Game.getPacman().getDirection()));
     }
 }

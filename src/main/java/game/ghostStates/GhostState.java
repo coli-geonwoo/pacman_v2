@@ -2,9 +2,14 @@ package game.ghostStates;
 
 import game.entities.Position;
 import game.entities.direction.CalculateResult;
+import game.entities.direction.DownCalculateStrategy;
+import game.entities.direction.LeftCalculateStrategy;
 import game.entities.direction.NextDirectionCalculator;
+import game.entities.direction.RightCalculateStrategy;
+import game.entities.direction.UpCalculateStrategy;
 import game.entities.ghosts.Ghost;
 import java.awt.Graphics2D;
+import java.util.List;
 
 //유령의 다양한 상태를 설명하는 추상 클래스
 public abstract class GhostState {
@@ -12,7 +17,14 @@ public abstract class GhostState {
     private final NextDirectionCalculator nextDirectionCalculator;
 
     public GhostState() {
-        this.nextDirectionCalculator = new NextDirectionCalculator();
+        this.nextDirectionCalculator = new NextDirectionCalculator(
+                List.of(
+                        new UpCalculateStrategy(),
+                        new DownCalculateStrategy(),
+                        new LeftCalculateStrategy(),
+                        new RightCalculateStrategy()
+                )
+        );
     }
 
     //유령이 이동할 다음 방향을 계산하는 방법

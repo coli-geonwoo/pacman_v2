@@ -10,8 +10,8 @@ public class GodMode implements PacmanState {
 
     private int godModeTimer;
 
-    public GodMode() {
-        this.godModeTimer = 0;
+    public GodMode(int godModeTimer) {
+        this.godModeTimer = godModeTimer;
     }
 
     @Override

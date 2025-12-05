@@ -1,7 +1,6 @@
 package game.ghostStrategies;
 
 import game.Game;
-import game.GameplayPanel;
 import game.entities.Position;
 import game.entities.ghosts.Ghost;
 
