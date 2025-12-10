@@ -43,7 +43,7 @@ public class GameOverScreen extends JDialog {
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         namePanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        JLabel nameLabel = new JLabel("이름 (Name):");
+        JLabel nameLabel = new JLabel("이름 (영어):");
         nameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
 
         JTextField nameField = new JTextField(15);
@@ -102,11 +102,13 @@ public class GameOverScreen extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText().trim();
-                if (name.isEmpty()) {
+                if (name.isEmpty() || !name.matches("^[a-zA-Z ]+$")) {
                     JOptionPane.showMessageDialog(GameOverScreen.this,
-                            "이름을 입력해주세요!\nPlease enter your name!",
+                            "영어로 이름을 입력해주세요!\nPlease enter your English name!",
                             "입력 오류",
                             JOptionPane.WARNING_MESSAGE);
+                    nameField.setText("");
+                    nameField.requestFocus();
                     return;
                 }
 
