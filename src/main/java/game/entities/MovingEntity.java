@@ -108,9 +108,9 @@ public abstract class MovingEntity extends Entity {
         if (!speeds.isDiagonal()) {
             this.speeds = speeds;
         } else if (speeds.getxSpeed() != 0) {
-            this.speeds = new Speeds(0, speeds.getxSpeed());
+            this.speeds.updateSpeed(0, speeds.getxSpeed());
         } else {
-            this.speeds = new Speeds(speeds.getxSpeed(), 0);
+            this.speeds.updateSpeed(speeds.getxSpeed(), 0);
         }
     }
 

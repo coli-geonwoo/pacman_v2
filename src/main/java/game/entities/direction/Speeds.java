@@ -31,6 +31,11 @@ public class Speeds {
         return Math.abs(xSpeed) == Math.abs(ySpeed);
     }
 
+    public void updateSpeed(int xSpeed, int ySpeed) {
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+    }
+
     public int getxSpeed() {
         return xSpeed;
     }
