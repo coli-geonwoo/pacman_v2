@@ -62,7 +62,7 @@ public class CsvReaderAdapter implements GameInfoReader {
                     Ghost ghost = AbstractGhostFactory.makeByUserInputs(
                             selectedGhost, xx * cellSize, yy * cellSize,
                             position,
-                            target.orElse(null)
+                            target.orElse(ghosts.get(0))
                     );
                     ghosts.add(ghost);
                     if (ghost instanceof Blinky) {
