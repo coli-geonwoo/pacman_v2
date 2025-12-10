@@ -18,6 +18,7 @@ import game.utils.CollisionDetector;
 import game.utils.CsvReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,12 +59,20 @@ public class CsvReaderAdapter implements GameInfoReader {
                     pacman = new Pacman(xx * cellSize, yy * cellSize, lives);
                 } else if (dataChar.equals("g")) {
                     String selectedGhost = selectGhosts[ghostIndex];
-                    Position position = GhostPosition.values()[ghostIndex++].getPosition();
-                    Ghost ghost = AbstractGhostFactory.makeByUserInputs(
-                            selectedGhost, xx * cellSize, yy * cellSize,
-                            position,
-                            target.orElse(ghosts.get(0))
-                    );
+                    Position position = GhostPosition.values()[ghostIndex].getPosition();
+                    Ghost ghost;
+                    if(ghostIndex>0) {
+                        ghost = AbstractGhostFactory.makeByUserInputs(
+                                selectedGhost, xx * cellSize, yy * cellSize,
+                                position,
+                                target.orElseGet(() -> ghosts.get(0))
+                        );
+                    }else{
+                        ghost = AbstractGhostFactory.makeByUserInputs(
+                                selectedGhost, xx * cellSize, yy * cellSize,
+                                position,null);
+                    }
+                    ghostIndex++;
                     ghosts.add(ghost);
                     if (ghost instanceof Blinky) {
                         target = Optional.of(ghost);
